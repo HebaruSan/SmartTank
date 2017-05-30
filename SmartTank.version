@@ -1,0 +1,26 @@
+{
+	"NAME": "SmartTank",
+	"URL": "https://raw.githubusercontent.com/HebaruSan/SmartTank/master/SmartTank.version",
+	"DOWNLOAD" : "https://github.com/HebaruSan/SmartTank/releases",
+	"GITHUB": {
+		"USERNAME": "HebaruSan",
+		"REPOSITORY": "SmartTank",
+		"ALLOW_PRE_RELEASE": false
+	},
+	"VERSION": {
+		"MAJOR": 0,
+		"MINOR": 1,
+		"PATCH": 0,
+		"BUILD": 0
+	},
+	"KSP_VERSION_MIN": {
+		"MAJOR": 1,
+		"MINOR": 3,
+		"PATCH": 0
+	},
+	"KSP_VERSION_MAX": {
+		"MAJOR": 1,
+		"MINOR": 3,
+		"PATCH": 8
+	}
+}

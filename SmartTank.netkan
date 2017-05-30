@@ -1,0 +1,22 @@
+{
+    "spec_version": 1,
+    "identifier": "SmartTank",
+    "name": "SmartTank",
+    "abstract": "Automatically resizes ProceduralParts fuel tanks to fit a specified thrust to weight ratio",
+    "description": "",
+    "comment": "Indexed by author. Please report any problems at the repository bugtracker.",
+    "$kref": "#/ckan/github/HebaruSan/SmartTank",
+    "$vref": "#/ckan/ksp-avc",
+    "license": "GPL-3.0",
+    "kind": "package",
+    "release_status": "development",
+    "resources": {
+        "homepage": "http://forum.kerbalspaceprogram.com/index.php?/topic/",
+        "bugtracker": "https://github.com/HebaruSan/SmartTank/issues",
+        "repository": "https://github.com/HebaruSan/SmartTank"
+    },
+    "depends": [
+        { "name": "KerbalEngineerRedux" },
+        { "name": "ProceduralParts" }
+    ]
+}
