@@ -32,13 +32,58 @@ namespace SmartTank {
 
 		private void MatchDiameters()
 		{
-			// TODO:
-			// 1. Get reference to upper part, if any
-			// 2. Inspect upper part's diameter
-			// 3. Get reference to lower part, if any
-			// 4. Inspect lower part's diameter
-			// 5. If they're the same, use that diameter for a cylindrical tank
-			// 6. Otherwise, switch to a cone using the respective diameters
+			float topDiameter  = opposingDiameter(topAttachedNode),
+				bottomDiameter = opposingDiameter(bottomAttachedNode);
+			if (topDiameter > 0 && bottomDiameter > 0) {
+				// Parts are attached to both top and bottom
+				if (bottomDiameter == topDiameter) {
+					// If they're the same, use that diameter for a cylindrical tank
+					SetCylindricalDiameter(topDiameter);
+				} else {
+					// Otherwise, switch to a cone using the respective diameters
+					SetConeDiameters(topDiameter, bottomDiameter);
+				}
+			} else if (topDiameter > 0) {
+				// Part at top only: cylinder, use top's diameter
+				SetCylindricalDiameter(topDiameter);
+			} else if (bottomDiameter > 0) {
+				// Part at bottom only: cylinder, use bottom's diameter
+				SetCylindricalDiameter(bottomDiameter);
+			}
+			// If nothing's attached, do nothing
+		}
+
+		private AttachNode topAttachedNode { get { return part.FindAttachNode("top"); } }
+		private AttachNode bottomAttachedNode { get { return part.FindAttachNode("bottom"); } }
+		private float opposingDiameter(AttachNode an)
+		{
+			AttachNode oppo = an?.FindOpposingNode();
+			if (oppo != null) {
+				switch (oppo.size) {
+					case 0:  return 0.625f;
+					default: return 1.25f * oppo.size;
+				}
+			}
+			return 0f;
+		}
+
+		private void SetCylindricalDiameter(float diameter)
+		{
+			// TODO: change shape if not already cylinder
+			if (part.HasModule<ProceduralShapeCylinder>()) {
+				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+				cyl.diameter = diameter;
+			}
+		}
+
+		private void SetConeDiameters(float topDiameter, float bottomDiameter)
+		{
+			// TODO: change shape if not already cone
+			if (part.HasModule<ProceduralShapeCone>()) {
+				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				con.topDiameter    = topDiameter;
+				con.bottomDiameter = bottomDiameter;
+			}
 		}
 
 		[KSPField(
@@ -216,7 +261,6 @@ namespace SmartTank {
 			const double wetDensity = dryDensity + fuelDensity;
 
 			if (part.HasModule<ProceduralShapeCylinder>()) {
-
 				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
 
 				double idealVolume = IdealWetMass / wetDensity;

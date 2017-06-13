@@ -6,7 +6,6 @@
 
 ## Auto fitting
 
-- [ ] Set top and bottom diameters to match attached parts
 - [ ] Set tank type to LF-only when only drained by NERVA, mixed for normal engines
 
 ## Global settings
