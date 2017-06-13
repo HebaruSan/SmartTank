@@ -1,14 +1,14 @@
 .PHONY: all clean
 
 SOURCEDIR=src
-SOURCE=$(wildcard $(SOURCEDIR)/*.cs) $(wildcard $(SOURCEDIR)/*.csproj)
+SOURCE=$(wildcard $(SOURCEDIR)/*.cs) $(wildcard $(SOURCEDIR)/*/*.cs) $(wildcard $(SOURCEDIR)/*.csproj)
 ASSETDIR=assets
 ICONS=$(wildcard $(ASSETDIR)/*.png)
 CONFIGS=$(wildcard $(ASSETDIR)/*.cfg)
 LANGUAGES=$(ASSETDIR)/lang
 README=README.md
 GAMELINK=$(SOURCEDIR)/KSP_x64_Data
-KERLINK=$(SOURCEDIR)/KerbalEngineer
+PROCPARTSLINK=$(SOURCEDIR)/ProceduralParts
 DEFAULTGAMEDIR=$(HOME)/.local/share/Steam/SteamApps/common/Kerbal Space Program
 
 DEBUGDLL=$(SOURCEDIR)/bin/Debug/SmartTank.dll
@@ -32,10 +32,10 @@ $(DLLSYMBOLS): $(DEBUGDLL)
 
 $(DLLDOCS): $(RELEASEDLL)
 
-$(DEBUGDLL): $(SOURCE) $(GAMELINK) $(KERLINK)
+$(DEBUGDLL): $(SOURCE) $(GAMELINK) $(PROCPARTSLINK)
 	cd $(SOURCEDIR) && xbuild /p:Configuration=Debug
 
-$(RELEASEDLL): $(SOURCE) $(GAMELINK) $(KERLINK)
+$(RELEASEDLL): $(SOURCE) $(GAMELINK) $(PROCPARTSLINK)
 	cd $(SOURCEDIR) && xbuild /p:Configuration=Release
 
 $(RELEASEZIP): $(DEBUGDLL) $(README) $(DLLDOCS) $(DLLSYMBOLS) $(LICENSE) $(VERSION) $(CONFIGS) $(LANGUAGES)
@@ -43,19 +43,19 @@ $(RELEASEZIP): $(DEBUGDLL) $(README) $(DLLDOCS) $(DLLSYMBOLS) $(LICENSE) $(VERSI
 	cp -a $^ $(DISTDIR)
 	zip -r $@ $(DISTDIR) -x \*.settings
 
-$(KERLINK):
+$(PROCPARTSLINK):
 	if [ ! -x "$(DEFAULTGAMEDIR)" ]; \
 	then \
-		echo "$(KERLINK) not found."; \
-		echo 'This must be a symlink to the folder where KerbalEngineer is installed.'; \
+		echo "$(PROCPARTSLINK) not found."; \
+		echo 'This must be a symlink to the folder where ProceduralParts is installed.'; \
 		exit 2; \
-	elif [ ! -x "$(DEFAULTGAMEDIR)/GameData/KerbalEngineer" ]; \
+	elif [ ! -x "$(DEFAULTGAMEDIR)/GameData/ProceduralParts" ]; \
 	then \
-		echo "KerbalEngineer is not installed at $(DEFAULTGAMEDIR)." \
+		echo "ProceduralParts is not installed at $(DEFAULTGAMEDIR)." \
 		echo "It is a prerequisite for this mod." \
 		exit 2; \
 	else \
-		ln -s "$(DEFAULTGAMEDIR)"/GameData/KerbalEngineer $(KERLINK); \
+		ln -s "$(DEFAULTGAMEDIR)"/GameData/ProceduralParts $(PROCPARTSLINK); \
 	fi
 
 $(GAMELINK):

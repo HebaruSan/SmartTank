@@ -16,7 +16,7 @@
         "repository": "https://github.com/HebaruSan/SmartTank"
     },
     "depends": [
-        { "name": "KerbalEngineerRedux" },
+        { "name": "ModuleManager" },
         { "name": "ProceduralParts" }
     ]
 }

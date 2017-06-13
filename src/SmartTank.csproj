@@ -53,12 +53,26 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="KerbalEngineer">
-      <HintPath>KerbalEngineer\KerbalEngineer.dll</HintPath>
+    <Reference Include="ProceduralParts">
+      <HintPath>ProceduralParts\Plugins\ProceduralParts.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SmartTank.cs" />
+    <Compile Include="SmartTankPart.cs" />
+    <Compile Include="Simulation\AttachNodeSim.cs" />
+    <Compile Include="Simulation\EngineSim.cs" />
+    <Compile Include="Simulation\PartSim.cs" />
+    <Compile Include="Simulation\ResourceContainer.cs" />
+    <Compile Include="Simulation\SimManager.cs" />
+    <Compile Include="Simulation\Simulation.cs" />
+    <Compile Include="Simulation\Stage.cs" />
+    <Compile Include="Extensions\PartExtensions.cs" />
+    <Compile Include="Helpers\Averager.cs" />
+    <Compile Include="Helpers\BasicLogger.cs" />
+    <Compile Include="Helpers\ForceAccumulator.cs" />
+    <Compile Include="Helpers\LogMsg.cs" />
+    <Compile Include="Helpers\Pool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

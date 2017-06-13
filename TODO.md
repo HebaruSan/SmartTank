@@ -2,39 +2,40 @@
 
 ## Calculation
 
-- [ ] Determine optimal fuel mass per stage
-- [ ] Associate each tank with the stage in which it is emptied
-- [ ] Split fuel among tanks in the same stage
-- [ ] If changes needed, stop iterating to let the simulator re-run
+- [ ] Always simulate both with and without atmosphere
 
 ## Auto fitting
 
 - [ ] Set top and bottom diameters to match attached parts
-- [ ] Set length to fit ideal fuel mass per stage
 - [ ] Set tank type to LF-only when only drained by NERVA, mixed for normal engines
-
-## Part right click menus
-
-- [ ] Auto-scale toggle button
-- [ ] Auto-scale Now button
-- [ ] Target TWR
-- [ ] Toggle diameter matching
-- [ ] Toggle fuel matching
 
 ## Global settings
 
+Basic DeltaV-like app launcher w/ hover panel:
+
+- [ ] Brain-on-engine bell icon
+- [ ] Default atmospheric ON/off
+- [ ] Default body for TWR
+- [ ] Default target TWR (1.5) (min, max)
 - [ ] Default auto-scale ON/off
-- [ ] Default target TWR (1.5)
 - [ ] Default diameter matching ON/off
 - [ ] Default fuel matching ON/off
 
 ## Dependency handling
 
-- [ ] Check for dependencies at run time
-- [ ] Basic DeltaV dependency option
+- [ ] Check for Procedural Parts at run time
+- [ ] Release a small interim update if not available for 1.3 yet
 
 ## Future / limitations
 
 - [ ] Solid fuel
 - [ ] Xenon
 - [ ] Monopropellant
+- [ ] Support cone shape
+- [ ] Support bezier cone shape
+- [ ] Support pill shape
+- [ ] Get the density numbers cleanly
+- [ ] Localization
+- [ ] Handle dry mass properly for exact TWRs
+- [ ] Hide length UI when auto scaling
+- [ ] Hide diameter UI when auto matching diameters
