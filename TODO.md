@@ -4,10 +4,6 @@
 
 - [ ] Always simulate both with and without atmosphere
 
-## Auto fitting
-
-- [ ] Set tank type to LF-only when only drained by NERVA, mixed for normal engines
-
 ## Global settings
 
 Basic DeltaV-like app launcher w/ hover panel:

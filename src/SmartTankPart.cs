@@ -96,12 +96,54 @@ namespace SmartTank {
 		)]
 		public bool FuelMatching = true;
 
+		private const string LfOxTypeName = "Mixed";
+
+		private string EngineTankType(Part enginePart)
+		{
+			if (enginePart != null && enginePart.HasModule<ModuleEngines>()) {
+				List<PartResourceDefinition> resources = enginePart.GetModule<ModuleEngines>().GetConsumedResources();
+				if (resources.Count == 1) {
+					return resources[0].name;
+				} else {
+					return LfOxTypeName;
+				}
+			} else {
+				return LfOxTypeName;
+			}
+		}
+
+		private Part findEngine()
+		{
+			for (int n = 0; n < part.attachNodes.Count; ++n) {
+				AttachNode an = part.attachNodes[n];
+				if (an?.attachedPart?.HasModule<ModuleEngines>() ?? false) {
+					return an.attachedPart;
+				}
+				Part opown = an?.FindOpposingNode()?.owner;
+				if (opown?.HasModule<ModuleEngines>() ?? false) {
+					return opown;
+				}
+				List<Part> parts = new List<Part>();
+				part.attachNodes[n].FindAttachedPart(parts);
+				for (int p = 0; p < parts.Count; ++p) {
+					if (parts[p].HasModule<ModuleEngines>()) {
+						return parts[p];
+					}
+				}
+			}
+			return null;
+		}
+
 		private void MatchFuel()
 		{
-			// TODO:
-			// 1. Check for engine at either top or bottom
-			// 2. If found, check what kind of fuel it uses
-			// 3. Switch to that kind of fuel
+			if (part.HasModule<TankContentSwitcher>()) {
+				TankContentSwitcher tcs = part.GetModule<TankContentSwitcher>();
+
+				string tankType = EngineTankType(findEngine());
+				if (tcs.tankType != tankType) {
+					tcs.tankType = tankType;
+				}
+			}
 		}
 
 		[KSPField(
