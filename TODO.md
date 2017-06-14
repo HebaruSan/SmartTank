@@ -34,7 +34,6 @@ Basic DeltaV-like app launcher w/ hover panel:
 - [ ] Support bezier cone shape
 - [ ] Support pill shape
 - [ ] Get the density numbers cleanly
-- [ ] Localization
 - [ ] Handle dry mass properly for exact TWRs
 - [ ] Hide length UI when auto scaling
 - [ ] Hide diameter UI when auto matching diameters

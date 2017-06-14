@@ -21,7 +21,7 @@ namespace SmartTank {
 		}
 
 		[KSPField(
-			guiName         = "Match attached diameters",
+			guiName         = "smartTank_DiameterMatchingPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true
@@ -87,7 +87,7 @@ namespace SmartTank {
 		}
 
 		[KSPField(
-			guiName         = "Match engine's fuel",
+			guiName         = "smartTank_FuelMatchingPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true
@@ -105,7 +105,7 @@ namespace SmartTank {
 		}
 
 		[KSPField(
-			guiName         = "Drains in stage",
+			guiName         = "smartTank_DrainsInStagePrompt",
 			isPersistant    = false,
 			guiActive       = false,
 			guiActiveEditor = false
@@ -113,7 +113,7 @@ namespace SmartTank {
 		public int DrainStage = -1;
 
 		[KSPField(
-			guiName         = "Ideal wet mass",
+			guiName         = "smartTank_IdealWetMassPrompt",
 			isPersistant    = false,
 			guiActive       = false,
 			guiActiveEditor = false
@@ -121,7 +121,7 @@ namespace SmartTank {
 		public double IdealWetMass;
 
 		[KSPField(
-			guiName         = "TWR at",
+			guiName         = "smartTank_TWRAtPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true
@@ -174,7 +174,7 @@ namespace SmartTank {
 		public double bodyGravAccel = 0;
 
 		[KSPField(
-			guiName         = "Atmospheric",
+			guiName         = "smartTank_AtmosphericPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true
@@ -184,7 +184,7 @@ namespace SmartTank {
 		bool Atmospheric = true;
 
 		[KSPField(
-			guiName         = "Target TWR",
+			guiName         = "smartTank_TargetTWRPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true,
@@ -201,7 +201,7 @@ namespace SmartTank {
 		public float targetTWR = SmartTank.configuredTWR;
 
 		[KSPField(
-			guiName         = "Auto-scale",
+			guiName         = "smartTank_AutoScalePrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true
@@ -239,7 +239,7 @@ namespace SmartTank {
         }
 
 		[KSPEvent(
-			guiName         = "Scale now",
+			guiName         = "smartTank_ScaleNowPrompt",
 			guiActive       = false,
 			guiActiveEditor = true,
 			active          = true
