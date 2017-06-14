@@ -25,9 +25,6 @@ Basic DeltaV-like app launcher w/ hover panel:
 - [ ] Solid fuel
 - [ ] Xenon
 - [ ] Monopropellant
-- [ ] Support cone shape
-- [ ] Support bezier cone shape
-- [ ] Support pill shape
 - [ ] Get the density numbers cleanly
 - [ ] Handle dry mass properly for exact TWRs
 - [ ] Hide length UI when auto scaling

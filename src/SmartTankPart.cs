@@ -301,11 +301,11 @@ namespace SmartTank {
 			const double fuelDensity = fuelMassPerUnit * (lfUnitsPerT + oxUnitsPerT) * dryDensity;
 			// Multiply volume by this to get the wet mass:
 			const double wetDensity = dryDensity + fuelDensity;
+			// Volume of fuel to use:
+			double idealVolume = IdealWetMass / wetDensity;
 
 			if (part.HasModule<ProceduralShapeCylinder>()) {
 				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
-
-				double idealVolume = IdealWetMass / wetDensity;
 				double radius = 0.5 * cyl.diameter;
 				double crossSectionArea = Math.PI * radius * radius;
 				double idealLength = idealVolume / crossSectionArea;
@@ -315,7 +315,37 @@ namespace SmartTank {
 				if (Math.Abs(cyl.length - idealLength) > 0.05) {
 					cyl.length = (float)idealLength;
 				}
+
 			}
+			if (part.HasModule<ProceduralShapePill>()) {
+				// We won't try to change the "fillet", so we can treat it as a constant
+				// Diameter is likewise a constant here
+				ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+				double fillet = pil.fillet, diameter = pil.diameter;
+				double idealLength = (idealVolume * 24f / Math.PI - (10f - 3f * Math.PI) * fillet * fillet * fillet - 3f * (Math.PI - 4) * diameter * fillet * fillet) / (6f * diameter * diameter);
+				if (idealLength < 1) {
+					idealLength = 1;
+				}
+				if (Math.Abs(pil.length - idealLength) > 0.05) {
+					pil.length = (float)idealLength;
+				}
+
+			}
+			if (part.HasModule<ProceduralShapeCone>()) {
+				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
+				double idealLength = idealVolume * 12f / (Math.PI * (topDiameter * topDiameter + topDiameter * bottomDiameter + bottomDiameter * bottomDiameter));
+				if (idealLength < 1) {
+					idealLength = 1;
+				}
+				if (Math.Abs(con.length - idealLength) > 0.05) {
+					con.length = (float)idealLength;
+				}
+
+			}
+
+			// BezierCone shapes not supported because they're too complicated.
+			// See ProceduralShapeBezierCone.CalcVolume to see why.
 		}
 
 	}
