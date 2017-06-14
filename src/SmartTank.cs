@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using KSP;
 using KSP.UI.Screens;
@@ -23,25 +24,31 @@ namespace SmartTank {
 		/// </summary>
 		public const string Name = "SmartTank";
 
-		public const float configuredTWR = 1.5f;
+		private static bool ProceduralPartsInstalled = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "ProceduralParts");
+
+		public static float configuredTWR = 1.5f;
 
 		/// <summary>
 		/// This is called at creation
 		/// </summary>
 		public void Start()
 		{
-			SimManager.OnReady += OnSimUpdate;
+			if (ProceduralPartsInstalled) {
+				SimManager.OnReady += OnSimUpdate;
+			}
 		}
 
 		private void Update()
 		{
-			try {
-				SimManager.Gravity = gravAccel(FlightGlobals.GetHomeBody());
-				SimManager.Atmosphere = FlightGlobals.GetHomeBody().GetPressure(0) * PhysicsGlobals.KpaToAtmospheres;
-				SimManager.Mach = 0;
-				SimManager.RequestSimulation();
-				SimManager.TryStartSimulation();
-			} catch (Exception e) {
+			if (ProceduralPartsInstalled) {
+				try {
+					SimManager.Gravity = gravAccel(FlightGlobals.GetHomeBody());
+					SimManager.Atmosphere = FlightGlobals.GetHomeBody().GetPressure(0) * PhysicsGlobals.KpaToAtmospheres;
+					SimManager.Mach = 0;
+					SimManager.RequestSimulation();
+					SimManager.TryStartSimulation();
+				} catch (Exception e) {
+				}
 			}
 		}
 
@@ -50,13 +57,15 @@ namespace SmartTank {
 		/// </summary>
 		public void OnDisable()
 		{
-			SimManager.OnReady -= OnSimUpdate;
+			if (ProceduralPartsInstalled) {
+				SimManager.OnReady -= OnSimUpdate;
+			}
 		}
 
 		/// <summary>
 		/// Fires when the simulator is updated
 		/// </summary>
-		public void OnSimUpdate()
+		private void OnSimUpdate()
 		{
 			double totalMassChange = 0;
 

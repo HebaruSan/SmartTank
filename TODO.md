@@ -22,7 +22,6 @@ Basic DeltaV-like app launcher w/ hover panel:
 
 ## Dependency handling
 
-- [ ] Check for Procedural Parts at run time
 - [ ] Release a small interim update if not available for 1.3 yet
 
 ## Future / limitations
