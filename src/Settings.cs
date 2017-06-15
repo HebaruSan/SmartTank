@@ -10,7 +10,6 @@ namespace SmartTank {
 	/// App-wide settings, mainly defaults for part-specific settings.
 	/// Patterned after BasicDeltaV_Settings by DMagic.
 	/// </summary>
-	[KSPAddon(KSPAddon.Startup.MainMenu, true)]
 	public class Settings : MonoBehavior {
 
 		private Settings()
@@ -20,17 +19,12 @@ namespace SmartTank {
 			}
 		}
 
-		private void Save()
+		public void Save()
 		{
 			ConfigNode.CreateConfigFromObject(this, new ConfigNode(GetType().Name)).Save(path);
 		}
 
-		public void OnDisable()
-		{
-			Save();
-		}
-
-		private const string settingsSuffix = "settings";
+		private const  string settingsSuffix = "settings";
 		private static string path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
 		public static Settings Instance { get; private set; } = new Settings();
 

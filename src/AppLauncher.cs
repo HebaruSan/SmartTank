@@ -72,7 +72,7 @@ namespace SmartTank {
 		private void OnToggleOn()
 		{
 			if (view == null) {
-				view = new SettingsView();
+				view = new SettingsView(() => { launcher.SetFalse(true); });
 			}
 			view.Show();
 		}

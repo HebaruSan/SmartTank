@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using KSP.Localization;
 
 namespace SmartTank {
 
 	public class SettingsView : DialogGUIVerticalLayout {
 
-		public SettingsView()
+		public SettingsView(UnityAction close)
 		{
 			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.DiameterMatching,
@@ -60,9 +61,12 @@ namespace SmartTank {
 				TextAnchor.MiddleCenter,
 				new DialogGUIButton(
 					"smartTank_CloseButtonText",
-					() => { },
+					() => {
+						Settings.Instance.Save();
+						close();
+					},
 					200f, -1f,
-					true
+					false
 				)
 			));
 		}
@@ -74,7 +78,7 @@ namespace SmartTank {
 			dialog = PopupDialog.SpawnPopupDialog(
 				new MultiOptionDialog(
 					SmartTank.Name,
-					"",
+					"smartTank_settingsSubtitle",
 					Localizer.Format("smartTank_SettingsTitle", SmartTank.Name),
 					UISkinManager.defaultSkin,
 					this
@@ -89,6 +93,7 @@ namespace SmartTank {
 		public void Dismiss()
 		{
 			if (dialog != null) {
+				Settings.Instance.Save();
 				dialog.Dismiss();
 				dialog = null;
 			}
