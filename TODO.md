@@ -24,3 +24,4 @@
 - [ ] Hide length UI when auto scaling
 - [ ] Hide diameter UI when auto matching diameters
 - [ ] Make settings look nicer
+- [ ] Option to hide non-procedural tanks

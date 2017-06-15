@@ -78,7 +78,7 @@ namespace SmartTank {
 			dialog = PopupDialog.SpawnPopupDialog(
 				new MultiOptionDialog(
 					SmartTank.Name,
-					"smartTank_settingsSubtitle",
+					"smartTank_SettingsSubtitle",
 					Localizer.Format("smartTank_SettingsTitle", SmartTank.Name),
 					UISkinManager.defaultSkin,
 					this

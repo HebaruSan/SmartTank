@@ -16,6 +16,8 @@ Unzip to your GameData folder.
 
 ## Known limitations
 
+Diameter auto-sizing will not work if you flip parts upside down before attaching them.
+
 ## Future plans
 
 See [TODO.md](TODO.md).

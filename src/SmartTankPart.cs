@@ -66,7 +66,7 @@ namespace SmartTank {
 		private AttachNode bottomAttachedNode { get { return part.FindAttachNode("bottom"); } }
 		private float opposingDiameter(AttachNode an)
 		{
-			AttachNode oppo = an?.FindOpposingNode();
+			AttachNode oppo = ReallyFindOpposingNode(an);
 			if (oppo != null) {
 				switch (oppo.size) {
 					case 0:  return 0.625f;
@@ -76,9 +76,46 @@ namespace SmartTank {
 			return 0f;
 		}
 
+		private AttachNode ReallyFindOpposingNode(AttachNode an)
+		{
+			Part opposingPart = an?.attachedPart;
+			if (opposingPart != null) {
+				for (int i = 0; i < (opposingPart?.attachNodes?.Count ?? 0); ++i) {
+					AttachNode otherNode = opposingPart.attachNodes[i];
+					if (an.owner == otherNode.attachedPart) {
+						return otherNode;
+					}
+				}
+			}
+
+			for (int p = 0; p < EditorLogic.fetch.ship.parts.Count; ++p) {
+				Part otherPart = EditorLogic.fetch.ship.parts[p];
+				for (int n = 0; n < (otherPart?.attachNodes?.Count ?? 0); ++n) {
+					AttachNode otherNode = otherPart.attachNodes[n];
+					if (an.owner == otherNode.attachedPart
+							&& an.id != otherNode.id) {
+						return otherNode;
+					}
+				}
+			}
+			return null;
+		}
+
+		private void SetShape(string shapeName)
+		{
+			if (part.HasModule<ProceduralPart>()) {
+				ProceduralPart pp = part.GetModule<ProceduralPart>();
+				if (shapeName != pp.shapeName) {
+					pp.shapeName = shapeName;
+					// Give the module a chance to update before we do anything else
+					pp.Update();
+				}
+			}
+		}
+
 		private void SetCylindricalDiameter(float diameter)
 		{
-			// TODO: change shape if not already cylinder
+			SetShape("Cylinder");
 			if (part.HasModule<ProceduralShapeCylinder>()) {
 				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
 				cyl.diameter = diameter;
@@ -87,7 +124,7 @@ namespace SmartTank {
 
 		private void SetConeDiameters(float topDiameter, float bottomDiameter)
 		{
-			// TODO: change shape if not already cone
+			SetShape("Cone");
 			if (part.HasModule<ProceduralShapeCone>()) {
 				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
 				con.topDiameter    = topDiameter;
