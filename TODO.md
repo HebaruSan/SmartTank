@@ -4,18 +4,6 @@
 
 - [ ] Always simulate both with and without atmosphere
 
-## Global settings
-
-Basic DeltaV-like app launcher w/ hover panel:
-
-- [ ] Brain-on-engine bell icon
-- [ ] Default atmospheric ON/off
-- [ ] Default body for TWR
-- [ ] Default target TWR (1.5) (min, max)
-- [ ] Default auto-scale ON/off
-- [ ] Default diameter matching ON/off
-- [ ] Default fuel matching ON/off
-
 ## Dependency handling
 
 - [ ] Release a small interim update if not available for 1.3 yet

@@ -60,6 +60,9 @@
   <ItemGroup>
     <Compile Include="SmartTank.cs" />
     <Compile Include="SmartTankPart.cs" />
+    <Compile Include="AppLauncher.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsView.cs" />
     <Compile Include="Simulation\AttachNodeSim.cs" />
     <Compile Include="Simulation\EngineSim.cs" />
     <Compile Include="Simulation\PartSim.cs" />

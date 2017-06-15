@@ -9,7 +9,7 @@ using SmartTank.Simulation;
 
 namespace SmartTank {
 
-	// We speak American in this house, young lady!
+	// Convert from en-UK to en-US
 	using MonoBehavior = UnityEngine.MonoBehaviour;
 
 	/// Our main plugin behavior.

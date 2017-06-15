@@ -12,11 +12,20 @@ namespace SmartTank {
 		public override void OnAwake()
 		{
 			base.OnAwake();
+
+			// Reset to defaults for each new part
+			DiameterMatching = Settings.Instance.DiameterMatching;
+			FuelMatching     = Settings.Instance.FuelMatching;
+			BodyForTWR       = Settings.Instance.BodyForTWR;
+			Atmospheric      = Settings.Instance.Atmospheric;
+			targetTWR        = Settings.Instance.TargetTWR;
+			AutoScale        = Settings.Instance.AutoScale;
+
 			initializeBodies();
 			bodyChanged(null, null);
 			initializeAutoScale();
 			autoScaleChanged(null, null);
-			// Update won't get calld without this
+			// Update won't get called without this
 			isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
 		}
 
@@ -28,7 +37,7 @@ namespace SmartTank {
 		), UI_Toggle(
 			scene           = UI_Scene.Editor
 		)]
-		public bool DiameterMatching = true;
+		public bool DiameterMatching = Settings.Instance.DiameterMatching;
 
 		private void MatchDiameters()
 		{
@@ -94,7 +103,7 @@ namespace SmartTank {
 		), UI_Toggle(
 			scene           = UI_Scene.Editor
 		)]
-		public bool FuelMatching = true;
+		public bool FuelMatching = Settings.Instance.FuelMatching;
 
 		private const string LfOxTypeName = "Mixed";
 
@@ -170,7 +179,7 @@ namespace SmartTank {
 		), UI_ChooseOption(
 			scene           = UI_Scene.Editor
 		)]
-		public string BodyForTWR = Planetarium?.fetch?.Home?.name ?? "Kerbin";
+		public string BodyForTWR = Settings.Instance.BodyForTWR;
 
 		private static string[] planetList = null;
 
@@ -223,14 +232,14 @@ namespace SmartTank {
 		), UI_Toggle(
 			scene           = UI_Scene.Editor
 		)]
-		bool Atmospheric = true;
+		public bool Atmospheric = Settings.Instance.Atmospheric;
 
 		[KSPField(
 			guiName         = "smartTank_TargetTWRPrompt",
 			isPersistant    = true,
 			guiActive       = false,
 			guiActiveEditor = true,
-			guiFormat       = "0.0"
+			guiFormat       = "G2"
 		), UI_FloatEdit(
 			scene           = UI_Scene.Editor,
 			incrementSlide  = 0.1f,
@@ -240,7 +249,7 @@ namespace SmartTank {
 			maxValue        = 10f,
 			sigFigs         = 1
 		)]
-		public float targetTWR = SmartTank.configuredTWR;
+		public float targetTWR = Settings.Instance.TargetTWR;
 
 		[KSPField(
 			guiName         = "smartTank_AutoScalePrompt",
@@ -250,7 +259,7 @@ namespace SmartTank {
 		), UI_Toggle(
 			scene           = UI_Scene.Editor
 		)]
-		public bool AutoScale = true;
+		public bool AutoScale = Settings.Instance.AutoScale;
 
 		private void initializeAutoScale()
 		{

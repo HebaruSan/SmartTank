@@ -28,3 +28,4 @@ See [INSTALL.md](INSTALL.md).
 
 ## Credits, acknowledgements, and dedication
 
+- Icon from http://fontawesome.io/icon/rocket/ http://fontawesome.io/icon/arrows-v/ http://fontawesome.io/icon/arrows-h/
