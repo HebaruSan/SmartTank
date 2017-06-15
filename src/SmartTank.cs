@@ -75,8 +75,9 @@ namespace SmartTank {
 
 				if (stage != null && stage.thrust > 0 && numTanks > 0) {
 					double dryMass = stage.totalMass - stage.resourceMass + totalMassChange;
+					double thrust = stage.drainedTanks[0].Atmospheric ? stage.thrust : stage.vacuumThrust;
 					double targetFuelMass = optimalFuelMass(
-						stage.thrust,
+						thrust,
 						stage.drainedTanks[0].bodyGravAccel,
 						stage.drainedTanks[0].targetTWR,
 						dryMass

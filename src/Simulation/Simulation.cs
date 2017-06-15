@@ -64,10 +64,12 @@ namespace SmartTank.Simulation
 		private double totalStageFlowRate;
 		private double totalStageIspFlowRate;
 		private double totalStageThrust;
+		private double totalStageVacuumThrust;
 		private ForceAccumulator totalStageThrustForce;
 		private Vector3 vecActualThrust;
 		private Vector3 vecStageDeltaV;
 		private Vector3 vecThrust;
+		private Vector3 vecVacuumThrust;
 		private double mach;
 		private float maxMach;
 		public String vesselName;
@@ -374,6 +376,7 @@ namespace SmartTank.Simulation
 
 				// Store various things in the Stage object
 				stage.thrust = totalStageThrust;
+				stage.vacuumThrust = totalStageVacuumThrust;
 				stage.thrustToWeight = totalStageThrust / (stageStartMass * gravity);
 				stage.maxThrustToWeight = stage.thrustToWeight;
 				stage.actualThrust = totalStageActualThrust;
@@ -761,9 +764,11 @@ namespace SmartTank.Simulation
 		{
 			// Reset all the values
 			vecThrust = Vector3.zero;
+			vecVacuumThrust = Vector3.zero;
 			vecActualThrust = Vector3.zero;
 			simpleTotalThrust = 0d;
 			totalStageThrust = 0d;
+			totalStageVacuumThrust = 0;
 			totalStageActualThrust = 0d;
 			totalStageFlowRate = 0d;
 			totalStageIspFlowRate = 0d;
@@ -777,6 +782,7 @@ namespace SmartTank.Simulation
 
 				simpleTotalThrust += engine.thrust;
 				vecThrust += ((float)engine.thrust * engine.thrustVec);
+				vecVacuumThrust += ((float)engine.vacuumThrust * engine.thrustVec);
 				vecActualThrust += ((float)engine.actualThrust * engine.thrustVec);
 
 				totalStageFlowRate += engine.ResourceConsumptions.Mass;
@@ -789,6 +795,7 @@ namespace SmartTank.Simulation
 			}
 			if (log != null) log.AppendLine("vecThrust = ", vecThrust.ToString(), "   magnitude = ", vecThrust.magnitude);
 			totalStageThrust = vecThrust.magnitude;
+			totalStageVacuumThrust = vecVacuumThrust.magnitude;
 			totalStageActualThrust = vecActualThrust.magnitude;
 
 			// Calculate the effective isp at this point

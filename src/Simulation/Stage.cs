@@ -36,6 +36,7 @@ namespace SmartTank.Simulation
 		public double maxThrustToWeight = 0.0;
 		public int number = 0;
 		public double thrust = 0.0;
+		public double vacuumThrust = 0.0;
 		public double thrustToWeight = 0.0;
 		public double time = 0.0;
 		public double totalCost = 0.0;

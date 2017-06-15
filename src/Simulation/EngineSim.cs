@@ -36,6 +36,7 @@ namespace SmartTank.Simulation
 		public double actualThrust = 0;
 		public bool isActive = false;
 		public double isp = 0;
+		public double vacuumIsp = 0;
 		public PartSim partSim;
 		public List<AppliedForce> appliedForces = new List<AppliedForce>();
 		public float maxMach;
@@ -43,6 +44,7 @@ namespace SmartTank.Simulation
 		public bool dontDecoupleActive = true;
 
 		public double thrust = 0;
+		public double vacuumThrust = 0;
 
 		// Add thrust vector to account for directional losses
 		public Vector3 thrustVec;
@@ -60,12 +62,14 @@ namespace SmartTank.Simulation
 			engineSim.actualThrust = 0;
 			engineSim.isActive = false;
 			engineSim.isp = 0;
+			engineSim.vacuumIsp = 0;
 			for (int i = 0; i < engineSim.appliedForces.Count; i++)
 			{
 				engineSim.appliedForces[i].Release();
 			}
 			engineSim.appliedForces.Clear();
 			engineSim.thrust = 0;
+			engineSim.vacuumThrust = 0;
 			engineSim.maxMach = 0f;
 			engineSim.isFlamedOut = false;
 		}
@@ -108,6 +112,7 @@ namespace SmartTank.Simulation
 			EngineSim engineSim = pool.Borrow();
 
 			engineSim.isp = 0.0;
+			engineSim.vacuumIsp = 0.0;
 			engineSim.maxMach = 0.0f;
 			engineSim.actualThrust = 0.0;
 			engineSim.partSim = theEngine;
@@ -124,8 +129,11 @@ namespace SmartTank.Simulation
 				if (log != null) log.AppendLine("hasVessel is true");
 
 				float flowModifier = GetFlowModifier(atmChangeFlow, atmCurve, engineSim.partSim.part.atmDensity, velCurve, machNumber, ref engineSim.maxMach);
+				float vacuumFlowModifier = GetFlowModifier(atmChangeFlow, atmCurve, 0, velCurve, machNumber, ref engineSim.maxMach);
 				engineSim.isp = atmosphereCurve.Evaluate((float)atmosphere);
+				engineSim.vacuumIsp = atmosphereCurve.Evaluate(0);
 				engineSim.thrust = GetThrust(Mathf.Lerp(minFuelFlow, maxFuelFlow, GetThrustPercent(thrustPercentage)) * flowModifier, engineSim.isp);
+				engineSim.vacuumThrust = GetThrust(Mathf.Lerp(minFuelFlow, maxFuelFlow, GetThrustPercent(thrustPercentage)) * vacuumFlowModifier, engineSim.vacuumIsp);
 				engineSim.actualThrust = engineSim.isActive ? resultingThrust : 0.0;
 				if (log != null)
 				{
@@ -160,8 +168,11 @@ namespace SmartTank.Simulation
 				if (log != null) log.buf.AppendLine("hasVessel is false");
 				float altitude = atmosphereDepth;
 				float flowModifier = GetFlowModifier(atmChangeFlow, atmCurve, body.GetDensity(body.GetPressure(altitude), body.GetTemperature(altitude)), velCurve, machNumber, ref engineSim.maxMach);
+				float vacuumFlowModifier = GetFlowModifier(atmChangeFlow, atmCurve, 0, velCurve, machNumber, ref engineSim.maxMach);
 				engineSim.isp = atmosphereCurve.Evaluate((float)atmosphere);
+				engineSim.vacuumIsp = atmosphereCurve.Evaluate(0);
 				engineSim.thrust = GetThrust(Mathf.Lerp(minFuelFlow, maxFuelFlow, GetThrustPercent(thrustPercentage)) * flowModifier, engineSim.isp);
+				engineSim.vacuumThrust = GetThrust(Mathf.Lerp(minFuelFlow, maxFuelFlow, GetThrustPercent(thrustPercentage)) * vacuumFlowModifier, engineSim.vacuumIsp);
 				engineSim.actualThrust = 0d;
 				if (log != null)
 				{

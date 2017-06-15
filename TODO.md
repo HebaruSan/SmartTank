@@ -1,9 +1,5 @@
 # TODO
 
-## Calculation
-
-- [ ] Always simulate both with and without atmosphere
-
 ## Dependency handling
 
 - [ ] Release a small interim update if not available for 1.3 yet
