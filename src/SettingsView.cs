@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using KSP.Localization;
 
 namespace SmartTank {
 
@@ -9,26 +10,26 @@ namespace SmartTank {
 		{
 			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.DiameterMatching,
-				"Diameter matching",
+				"smartTank_DiameterMatchingPrompt",
 				(bool b) => { Settings.Instance.DiameterMatching = b; }
 			));
 			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.FuelMatching,
-				"Fuel matching",
+				"smartTank_FuelMatchingPrompt",
 				(bool b) => { Settings.Instance.FuelMatching = b; }
 			));
 			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.AutoScale,
-				"Auto-scale",
+				"smartTank_AutoScalePrompt",
 				(bool b) => { Settings.Instance.AutoScale = b; }
 			));
 			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.Atmospheric,
-				"Atmospheric",
+				"smartTank_AtmosphericPrompt",
 				(bool b) => { Settings.Instance.Atmospheric = b; }
 			));
 			AddChild(new DialogGUIHorizontalLayout(
-				new DialogGUILabel("Target TWR:"),
+				new DialogGUILabel("smartTank_TargetTWRPrompt"),
 				new DialogGUIVerticalLayout(
 					10, 10, 2, new RectOffset(0, 0, 0, 0),
 					TextAnchor.MiddleCenter,
@@ -43,7 +44,7 @@ namespace SmartTank {
 				)
 			));
 			AddChild(new DialogGUIHorizontalLayout(
-				new DialogGUILabel("Body for TWR:"),
+				new DialogGUILabel("smartTank_TWRAtPrompt"),
 				new DialogGUITextInput(
 					Settings.Instance.BodyForTWR,
 					false,
@@ -58,7 +59,7 @@ namespace SmartTank {
 			AddChild(new DialogGUIHorizontalLayout(
 				TextAnchor.MiddleCenter,
 				new DialogGUIButton(
-					"Close",
+					"smartTank_CloseButtonText",
 					() => { },
 					200f, -1f,
 					true
@@ -74,7 +75,7 @@ namespace SmartTank {
 				new MultiOptionDialog(
 					SmartTank.Name,
 					"",
-					$"{SmartTank.Name} Settings",
+					Localizer.Format("smartTank_SettingsTitle", SmartTank.Name),
 					UISkinManager.defaultSkin,
 					this
 				),

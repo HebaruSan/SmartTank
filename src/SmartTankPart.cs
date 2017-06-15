@@ -62,7 +62,7 @@ namespace SmartTank {
 			// If nothing's attached, do nothing
 		}
 
-		private AttachNode topAttachedNode { get { return part.FindAttachNode("top"); } }
+		private AttachNode topAttachedNode    { get { return part.FindAttachNode("top");    } }
 		private AttachNode bottomAttachedNode { get { return part.FindAttachNode("bottom"); } }
 		private float opposingDiameter(AttachNode an)
 		{

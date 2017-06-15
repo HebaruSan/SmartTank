@@ -1,6 +1,7 @@
 using UnityEngine;
 using KSP.UI.Screens;
 using KSP.UI.TooltipTypes;
+using KSP.Localization;
 
 namespace SmartTank {
 
@@ -29,8 +30,8 @@ namespace SmartTank {
 			RemoveLauncher();
 		}
 
-		private static string tooltipTitle = $"{SmartTank.Name} Settings";
-		private static string tooltipText  = $"Configure defaults for procedural tank auto-scaling";
+		private static string tooltipTitle = Localizer.Format("smartTank_SettingsTitle", SmartTank.Name);
+		private static string tooltipText  = "smartTank_SettingsTooltip";
 
 		private void AddLauncher()
 		{
