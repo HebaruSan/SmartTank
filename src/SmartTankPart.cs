@@ -20,11 +20,16 @@ namespace SmartTank {
 			Atmospheric      = Settings.Instance.Atmospheric;
 			targetTWR        = Settings.Instance.TargetTWR;
 			AutoScale        = Settings.Instance.AutoScale;
+		}
 
+		public void Start()
+		{
 			initializeBodies();
 			bodyChanged(null, null);
 			initializeAutoScale();
 			autoScaleChanged(null, null);
+			initializeDiameter();
+			diameterChanged(null, null);
 			// Update won't get called without this
 			isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
 		}
@@ -38,6 +43,60 @@ namespace SmartTank {
 			scene           = UI_Scene.Editor
 		)]
 		public bool DiameterMatching = Settings.Instance.DiameterMatching;
+
+		private void initializeDiameter()
+		{
+			BaseField field = Fields["DiameterMatching"];
+			UI_Toggle tog = (UI_Toggle)field.uiControlEditor;
+			tog.onFieldChanged = diameterChanged;
+			// Note whether ProceduralParts found enough shapes to enable the setting
+			shapeNameActiveDefault = shapeNameActive;
+		}
+
+		private void diameterChanged(BaseField field, object o)
+		{
+			diameterActive  = !DiameterMatching;
+			shapeNameActive = !DiameterMatching;
+		}
+
+		private bool diameterActive {
+			set {
+				if (part.HasModule<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+					cyl.Fields["diameter"].guiActiveEditor = value;
+				}
+				if (part.HasModule<ProceduralShapePill>()) {
+					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+					pil.Fields["length"].guiActiveEditor = value;
+				}
+				if (part.HasModule<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+					con.Fields["topDiameter"   ].guiActiveEditor = value;
+					con.Fields["bottomDiameter"].guiActiveEditor = value;
+				}
+			}
+		}
+
+		// ProceduralPart sets shapeName active and inactive itself.
+		// We don't want to enable it when they've disabled it, so we need
+		// to cache their setting.
+		private bool shapeNameActiveDefault = false;
+
+		private bool shapeNameActive {
+			get {
+				if (part.HasModule<ProceduralPart>()) {
+					ProceduralPart pp = part.GetModule<ProceduralPart>();
+					return pp.Fields["shapeName"].guiActiveEditor;
+				}
+				return false;
+			}
+			set {
+				if (shapeNameActiveDefault && part.HasModule<ProceduralPart>()) {
+					ProceduralPart pp = part.GetModule<ProceduralPart>();
+					pp.Fields["shapeName"].guiActiveEditor = value;
+				}
+			}
+		}
 
 		private void MatchDiameters()
 		{
@@ -309,6 +368,24 @@ namespace SmartTank {
 		{
 			BaseEvent e = Events["ScaleNow"];
 			e.guiActiveEditor = !AutoScale;
+			lengthActive = !AutoScale;
+		}
+
+		private bool lengthActive {
+			set {
+				if (part.HasModule<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+					cyl.Fields["length"].guiActiveEditor = value;
+				}
+				if (part.HasModule<ProceduralShapePill>()) {
+					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+					pil.Fields["length"].guiActiveEditor = value;
+				}
+				if (part.HasModule<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+					con.Fields["length"].guiActiveEditor = value;
+				}
+			}
 		}
 
 		public double mass { get { return part.mass; } }

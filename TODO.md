@@ -8,6 +8,11 @@
 
 - [ ] Detect stack attached parts correctly
 
+## Calculation
+
+- [ ] Count non procedural fuel in stages
+- [ ] Handle dry mass properly for exact TWRs
+
 ## More fuels
 
 - [ ] Solid fuel
@@ -17,11 +22,8 @@
 ## Code style
 
 - [ ] Get the density numbers cleanly
-- [ ] Handle dry mass properly for exact TWRs
 
 ## UI clean-up
 
-- [ ] Hide length UI when auto scaling
-- [ ] Hide diameter UI when auto matching diameters
 - [ ] Make settings look nicer
 - [ ] Option to hide non-procedural tanks
