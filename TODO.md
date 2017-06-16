@@ -1,17 +1,16 @@
 # TODO
 
-## Dependency handling
-
-- [ ] Release a small interim update if not available for 1.3 yet
-
 ## Fixes
 
-- [ ] Detect stack attached parts correctly
+- [ ] Oscillating big/tiny tanks in stage-and-a-half configurations
+- [ ] Flickering of tank sizes
+- [ ] Auto scaling stops working in certain cases
+- [ ] KER fails to calculate in some crossfeed configurations
+- [ ] Freeze on re-root
 
 ## Calculation
 
-- [ ] Count non procedural fuel in stages
-- [ ] Handle dry mass properly for exact TWRs
+- [ ] Get precise diameters if next to other procedural parts
 
 ## More fuels
 
@@ -22,8 +21,10 @@
 ## Code style
 
 - [ ] Get the density numbers cleanly
+- [ ] Search the AttachNodes properly
 
 ## UI clean-up
 
 - [ ] Make settings look nicer
-- [ ] Option to hide non-procedural tanks
+- [ ] Propagate right click settings across all tanks in a stage
+- [ ] List select for planet & texture settings

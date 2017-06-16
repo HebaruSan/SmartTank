@@ -10,6 +10,14 @@ namespace SmartTank {
 		public SettingsView(UnityAction close)
 		{
 			AddChild(new DialogGUIToggle(
+				() => Settings.Instance.HideNonProceduralFuelTanks,
+				"smartTank_HideNonProceduralFuelTanksPrompt",
+				(bool b) => {
+					Settings.Instance.HideNonProceduralFuelTanks = b;
+					Settings.Instance.HideNonProceduralFuelTanksChanged();
+				}
+			));
+			AddChild(new DialogGUIToggle(
 				() => Settings.Instance.DiameterMatching,
 				"smartTank_DiameterMatchingPrompt",
 				(bool b) => { Settings.Instance.DiameterMatching = b; }
@@ -54,17 +62,27 @@ namespace SmartTank {
 						Settings.Instance.BodyForTWR = s;
 						return s;
 					},
-					40f
+					30f
+				)
+			));
+			AddChild(new DialogGUIHorizontalLayout(
+				new DialogGUILabel("smartTank_DefaultTexturePrompt"),
+				new DialogGUITextInput(
+					Settings.Instance.DefaultTexture,
+					false,
+					15,
+					(string s) => {
+						Settings.Instance.DefaultTexture = s;
+						return s;
+					},
+					30f
 				)
 			));
 			AddChild(new DialogGUIHorizontalLayout(
 				TextAnchor.MiddleCenter,
 				new DialogGUIButton(
 					"smartTank_CloseButtonText",
-					() => {
-						Settings.Instance.Save();
-						close();
-					},
+					() => { close(); },
 					200f, -1f,
 					false
 				)

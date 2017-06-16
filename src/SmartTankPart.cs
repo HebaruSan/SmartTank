@@ -30,8 +30,17 @@ namespace SmartTank {
 			autoScaleChanged(null, null);
 			initializeDiameter();
 			diameterChanged(null, null);
+			SetTexture();
 			// Update won't get called without this
 			isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
+		}
+
+		private void SetTexture()
+		{
+			if (part.HasModule<ProceduralPart>()) {
+				ProceduralPart pp = part.GetModule<ProceduralPart>();
+				pp.textureSet = Settings.Instance.DefaultTexture;
+			}
 		}
 
 		[KSPField(
@@ -152,6 +161,7 @@ namespace SmartTank {
 				for (int n = 0; n < (otherPart?.attachNodes?.Count ?? 0); ++n) {
 					AttachNode otherNode = otherPart.attachNodes[n];
 					if (an.owner == otherNode.attachedPart
+							&& otherNode.nodeType == AttachNode.NodeType.Stack
 							&& an.id != otherNode.id) {
 						return otherNode;
 					}
@@ -388,8 +398,6 @@ namespace SmartTank {
 			}
 		}
 
-		public double mass { get { return part.mass; } }
-
 		public void Update()
         {
 			if (DiameterMatching) {
@@ -438,8 +446,8 @@ namespace SmartTank {
 				if (Math.Abs(cyl.length - idealLength) > 0.05) {
 					cyl.length = (float)idealLength;
 				}
-
 			}
+
 			if (part.HasModule<ProceduralShapePill>()) {
 				// We won't try to change the "fillet", so we can treat it as a constant
 				// Diameter is likewise a constant here
@@ -452,8 +460,8 @@ namespace SmartTank {
 				if (Math.Abs(pil.length - idealLength) > 0.05) {
 					pil.length = (float)idealLength;
 				}
-
 			}
+
 			if (part.HasModule<ProceduralShapeCone>()) {
 				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
 				double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
@@ -464,7 +472,6 @@ namespace SmartTank {
 				if (Math.Abs(con.length - idealLength) > 0.05) {
 					con.length = (float)idealLength;
 				}
-
 			}
 
 			// BezierCone shapes not supported because they're too complicated.
