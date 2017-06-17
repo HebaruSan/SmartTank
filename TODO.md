@@ -7,6 +7,7 @@
 - [ ] Auto scaling stops working in certain cases
 - [ ] KER fails to calculate in some crossfeed configurations
 - [ ] Freeze on re-root
+- [ ] Force full fuel
 
 ## Calculation
 
@@ -25,6 +26,9 @@
 
 ## UI clean-up
 
-- [ ] Make settings look nicer
 - [ ] Propagate right click settings across all tanks in a stage
-- [ ] List select for planet & texture settings
+  - [ ] Or use global settings as tiebreakers
+- [ ] Settings tooltips
+- [ ] List select for planet setting
+- [ ] List select for texture setting
+  - [ ] Display default texture
