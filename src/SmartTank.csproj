@@ -71,6 +71,7 @@
     <Compile Include="Simulation\Simulation.cs" />
     <Compile Include="Simulation\Stage.cs" />
     <Compile Include="Extensions\PartExtensions.cs" />
+    <Compile Include="Extensions\TooltipExtensions.cs" />
     <Compile Include="Helpers\Averager.cs" />
     <Compile Include="Helpers\BasicLogger.cs" />
     <Compile Include="Helpers\ForceAccumulator.cs" />

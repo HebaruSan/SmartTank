@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using KSP.Localization;
+using KSP.UI.TooltipTypes;
 
 namespace SmartTank {
+
+	using static TooltipExtensions;
 
 	public class SettingsView : DialogGUIVerticalLayout {
 
@@ -25,16 +28,20 @@ namespace SmartTank {
 						TextAnchor.UpperLeft,
 
 						new DialogGUILabel("smartTank_SettingsAutoBoxTitle"),
-						new DialogGUIToggle(
+						DeferTooltip(new DialogGUIToggle(
 							() => Settings.Instance.AutoScale,
 							"smartTank_AutoScaleSettingPrompt",
 							(bool b) => { Settings.Instance.AutoScale = b; }
-						),
-						new DialogGUIToggle(
+						) {
+							tooltipText = "smartTank_AutoScaleSettingTooltip"
+						}),
+						DeferTooltip(new DialogGUIToggle(
 							() => Settings.Instance.DiameterMatching,
 							"smartTank_DiameterMatchingSettingPrompt",
 							(bool b) => { Settings.Instance.DiameterMatching = b; }
-						)
+						) {
+							tooltipText = "smartTank_DiameterMatchingSettingTooltip"
+						})
 					)
 				),
 				new DialogGUIBox(
@@ -47,19 +54,21 @@ namespace SmartTank {
 						new DialogGUIVerticalLayout(
 							10, 1.8f * textFieldHeight, 2, new RectOffset(0, 0, 0, 0),
 							TextAnchor.MiddleCenter,
-							new DialogGUISlider(
+							DeferTooltip(new DialogGUISlider(
 								() => (float)Math.Log10(Settings.Instance.TargetTWR),
 								-1f, 1f,
 								false,
 								-1, -1,
 								(float f) => { Settings.Instance.TargetTWR = (float)Math.Pow(10f, f); }
-							),
+							) {
+								tooltipText = "smartTank_SettingsTWRBoxTooltip"
+							}),
 							new DialogGUILabel(() => $"{Settings.Instance.TargetTWR:G3}")
 						),
 						new DialogGUIHorizontalLayout(
 							TextAnchor.MiddleLeft,
 							new DialogGUILabel("smartTank_TWRAtSettingPrompt"),
-							new DialogGUITextInput(
+							DeferTooltip(new DialogGUITextInput(
 								Settings.Instance.BodyForTWR,
 								false,
 								15,
@@ -68,12 +77,16 @@ namespace SmartTank {
 									return s;
 								},
 								textFieldHeight
-							),
-							new DialogGUIToggle(
+							) {
+								tooltipText = "smartTank_TWRAtSettingTooltip"
+							}),
+							DeferTooltip(new DialogGUIToggle(
 								() => Settings.Instance.Atmospheric,
 								"smartTank_AtmosphericSettingPrompt",
 								(bool b) => { Settings.Instance.Atmospheric = b; }
-							)
+							) {
+								tooltipText = "smartTank_AtmosphericSettingTooltip"
+							})
 						)
 					)
 				)
@@ -81,25 +94,29 @@ namespace SmartTank {
 			AddChild(new DialogGUIHorizontalLayout(
 				TextAnchor.MiddleLeft,
 
-				new DialogGUIToggle(
+				DeferTooltip(new DialogGUIToggle(
 					() => Settings.Instance.FuelMatching,
 					"smartTank_FuelMatchingPrompt",
 					(bool b) => { Settings.Instance.FuelMatching = b; }
-				),
-				new DialogGUIToggle(
+				) {
+					tooltipText = "smartTank_FuelMatchingTooltip"
+				}),
+				DeferTooltip(new DialogGUIToggle(
 					() => Settings.Instance.HideNonProceduralFuelTanks,
 					"smartTank_HideNonProceduralFuelTanksPrompt",
 					(bool b) => {
 						Settings.Instance.HideNonProceduralFuelTanks = b;
 						Settings.Instance.HideNonProceduralFuelTanksChanged();
 					}
-				)
+				) {
+					tooltipText = "smartTank_HideNonProceduralFuelTanksTooltip"
+				})
 			));
 			AddChild(new DialogGUIHorizontalLayout(
 				TextAnchor.MiddleLeft,
 
 				new DialogGUILabel("smartTank_DefaultTexturePrompt", leftColWidth),
-				new DialogGUITextInput(
+				DeferTooltip(new DialogGUITextInput(
 					Settings.Instance.DefaultTexture,
 					false,
 					15,
@@ -108,7 +125,9 @@ namespace SmartTank {
 						return s;
 					},
 					textFieldHeight
-				)
+				) {
+					tooltipText = "smartTank_DefaultTextureTooltip"
+				})
 			));
 
 			AddChild(new DialogGUISpace(padding));
