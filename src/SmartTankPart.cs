@@ -289,24 +289,28 @@ namespace SmartTank {
 
 		private static string[] planetList = null;
 
+		private void getPlanetList()
+		{
+			if (planetList == null) {
+				List<string> options = new List<string>();
+				for (int i = 0; i < FlightGlobals.Bodies.Count; ++i) {
+					CelestialBody b = FlightGlobals.Bodies[i];
+					if (b.hasSolidSurface) {
+						options.Add(b.name);
+					}
+				}
+				planetList = options.ToArray();
+			}
+		}
+
 		private void initializeBodies()
 		{
 			if (FlightGlobals.Bodies != null) {
 				BaseField field = Fields["BodyForTWR"];
 	            UI_ChooseOption range = (UI_ChooseOption)field.uiControlEditor;
 				if (range != null) {
+					getPlanetList();
 					range.onFieldChanged = bodyChanged;
-
-					if (planetList == null) {
-						List<string> options = new List<string>();
-						for (int i = 0; i < FlightGlobals.Bodies.Count; ++i) {
-							CelestialBody b = FlightGlobals.Bodies[i];
-							if (b.hasSolidSurface) {
-								options.Add(b.name);
-							}
-						}
-						planetList = options.ToArray();
-					}
 					range.options = planetList;
 				}
 			}

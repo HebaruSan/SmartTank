@@ -28,6 +28,4 @@
 
 - [ ] Propagate right click settings across all tanks in a stage
   - [ ] Or use global settings as tiebreakers
-- [ ] List select for planet setting
-- [ ] List select for texture setting
-  - [ ] Display default texture
+- [ ] Display texture in settings

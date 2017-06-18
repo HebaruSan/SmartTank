@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,10 +20,15 @@ namespace SmartTank {
 				TextAnchor.UpperLeft
 			)
 		{
+			getPlanetList();
+			getTextureList();
+
 			AddChild(new DialogGUIHorizontalLayout(
 				windowWidth, -1,
+
 				new DialogGUIBox(
 					"", boxWidth, boxHeight, null,
+
 					new DialogGUIVerticalLayout(
 						boxWidth, boxHeight, boxSpacing, boxPadding,
 						TextAnchor.UpperLeft,
@@ -46,6 +52,7 @@ namespace SmartTank {
 				),
 				new DialogGUIBox(
 					"", boxWidth, boxHeight, null,
+
 					new DialogGUIVerticalLayout(
 						boxWidth, boxHeight, boxSpacing, boxPadding,
 						TextAnchor.UpperLeft,
@@ -54,6 +61,7 @@ namespace SmartTank {
 						new DialogGUIVerticalLayout(
 							10, 1.8f * textFieldHeight, 2, new RectOffset(0, 0, 0, 0),
 							TextAnchor.MiddleCenter,
+
 							DeferTooltip(new DialogGUISlider(
 								() => (float)Math.Log10(Settings.Instance.TargetTWR),
 								-1f, 1f,
@@ -67,16 +75,12 @@ namespace SmartTank {
 						),
 						new DialogGUIHorizontalLayout(
 							TextAnchor.MiddleLeft,
+
 							new DialogGUILabel("smartTank_TWRAtSettingPrompt"),
-							DeferTooltip(new DialogGUITextInput(
-								Settings.Instance.BodyForTWR,
-								false,
-								15,
-								(string s) => {
-									Settings.Instance.BodyForTWR = s;
-									return s;
-								},
-								textFieldHeight
+							DeferTooltip(new DialogGUIChooseOption(
+								planetList,
+								() => Settings.Instance.BodyForTWR,
+								(string s) => { Settings.Instance.BodyForTWR = s; }
 							) {
 								tooltipText = "smartTank_TWRAtSettingTooltip"
 							}),
@@ -92,6 +96,7 @@ namespace SmartTank {
 				)
 			));
 			AddChild(new DialogGUIHorizontalLayout(
+				true, true, 2, boxPadding,
 				TextAnchor.MiddleLeft,
 
 				DeferTooltip(new DialogGUIToggle(
@@ -116,15 +121,11 @@ namespace SmartTank {
 				TextAnchor.MiddleLeft,
 
 				new DialogGUILabel("smartTank_DefaultTexturePrompt", leftColWidth),
-				DeferTooltip(new DialogGUITextInput(
-					Settings.Instance.DefaultTexture,
-					false,
-					15,
-					(string s) => {
-						Settings.Instance.DefaultTexture = s;
-						return s;
-					},
-					textFieldHeight
+				DeferTooltip(new DialogGUIChooseOption(
+					textureList,
+					() => Settings.Instance.DefaultTexture,
+					(string s) => { Settings.Instance.DefaultTexture = s; },
+					windowWidth - leftColWidth - 2 * padding
 				) {
 					tooltipText = "smartTank_DefaultTextureTooltip"
 				})
@@ -147,12 +148,45 @@ namespace SmartTank {
 		private const  float      rightColWidth   = 1.5f * leftColWidth;
 		private const  float      textFieldHeight = 25f;
 		private const  float      boxWidth        = leftColWidth + rightColWidth;
-		private const  float      boxHeight       = 4.5f * textFieldHeight;
+		private const  float      boxHeight       = 5f * textFieldHeight;
 		private const  float      boxSpacing      = 2;
 		private const  int        padding         = 10;
 		private static RectOffset boxPadding      = new RectOffset(padding, padding, padding, padding);
 		private static RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
 		private const  float      windowWidth     = 2 * boxWidth + 2 * padding;
+
+		private static string[]   planetList      = null;
+		private static string[]   textureList     = null;
+
+		private void getPlanetList()
+		{
+			if (planetList == null) {
+				List<string> options = new List<string>();
+				for (int i = 0; i < FlightGlobals.Bodies.Count; ++i) {
+					CelestialBody b = FlightGlobals.Bodies[i];
+					if (b.hasSolidSurface) {
+						options.Add(b.name);
+					}
+				}
+				planetList = options.ToArray();
+			}
+		}
+
+		private void getTextureList()
+		{
+			if (textureList == null) {
+				List<string> options = new List<string>();
+				ConfigNode[] nodes =  GameDatabase.Instance.GetConfigNodes("STRETCHYTANKTEXTURES");
+				for (int n = 0; n < nodes.Length; ++n) {
+					ConfigNode textureInfo = nodes[n];
+					for (int t = 0; t < textureInfo.nodes.Count; ++t) {
+						options.Add(textureInfo.nodes[t].name);
+					}
+				}
+				options.Sort();
+				textureList = options.ToArray();
+			}
+		}
 
 		private PopupDialog dialog;
 
