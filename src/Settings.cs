@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 using ProceduralParts;
+using KSP.UI.Screens;
 
 namespace SmartTank {
 
@@ -34,21 +35,21 @@ namespace SmartTank {
 
 		public void HideNonProceduralFuelTanksChanged()
 		{
-			if (HideNonProceduralFuelTanks) {
-				List<AvailablePart> parts = PartLoader.LoadedPartsList;
-				for (int p = 0; p < parts.Count; ++p) {
-					if (!parts[p].partPrefab.HasModule<ProceduralPart>()) {
-						for (int r = 0; r < parts[p].resourceInfos.Count; ++r) {
-							if (parts[p].resourceInfos[r].resourceName == fuelResourceName) {
-								parts[p].category = PartCategories.none;
-								break;
-							}
+			List<AvailablePart> parts = PartLoader.LoadedPartsList;
+			for (int p = 0; p < parts.Count; ++p) {
+				if (!parts[p].partPrefab.HasModule<ProceduralPart>()) {
+					for (int r = 0; r < parts[p].resourceInfos.Count; ++r) {
+						if (parts[p].resourceInfos[r].resourceName == fuelResourceName) {
+							parts[p].category =
+								HideNonProceduralFuelTanks
+								? PartCategories.none
+								: PartCategories.FuelTank;
+							break;
 						}
 					}
 				}
-			} else {
-				// Can we unhide them??
 			}
+			EditorPartList.Instance.Refresh();
 		}
 
 		// These are the actual settings.
