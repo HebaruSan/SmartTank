@@ -9,7 +9,7 @@ namespace SmartTank {
 		public DialogGUIChooseOption(string[] Choices, Func<string> GetChoice, Callback<string> SetChoice, float width = 100f, float height = 40f)
 			: base("", width, height, null)
 		{
-			choices = Choices;
+			choices   = Choices;
 			getChoice = GetChoice;
 			setChoice = SetChoice;
 

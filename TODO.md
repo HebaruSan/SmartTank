@@ -7,7 +7,6 @@
 - [ ] Auto scaling stops working in certain cases
 - [ ] KER fails to calculate in some crossfeed configurations
 - [ ] Freeze on re-root
-- [ ] Force full fuel
 
 ## Calculation
 

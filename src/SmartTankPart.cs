@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using ProceduralParts;
 
 namespace SmartTank {
@@ -403,17 +404,30 @@ namespace SmartTank {
 		}
 
 		public void Update()
-        {
+		{
 			if (DiameterMatching) {
 				MatchDiameters();
 			}
 			if (FuelMatching) {
 				MatchFuel();
 			}
-            if (AutoScale) {
+			if (AutoScale) {
 				ScaleNow();
+			} else {
+				allowResourceEditing(true);
 			}
-        }
+		}
+
+		private void allowResourceEditing(bool allowEdit)
+		{
+			for (int i = 0; i < part.Resources.Count; ++i) {
+				PartResource r = part.Resources[i];
+				if (!allowEdit) {
+					r.amount   = r.maxAmount;
+				}
+				r.isTweakable  = allowEdit;
+			}
+		}
 
 		[KSPEvent(
 			guiName         = "smartTank_ScaleNowPrompt",
@@ -423,6 +437,7 @@ namespace SmartTank {
 		)]
 		public void ScaleNow()
 		{
+			allowResourceEditing(false);
 			// These values live in ProceduralParts's cfg files, but they're hidden from us.
 			// Multiply the volume in m^3 by this to get the dry mass in tons:
 			const double dryDensity = 0.1089;
