@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -59,7 +60,7 @@ namespace SmartTank {
 
 						new DialogGUILabel("smartTank_SettingsTWRBoxTitle"),
 						new DialogGUIVerticalLayout(
-							10, 1.8f * textFieldHeight, 2, new RectOffset(0, 0, 0, 0),
+							padding, 1.8f * textFieldHeight, 0, noPadding,
 							TextAnchor.MiddleCenter,
 
 							DeferTooltip(new DialogGUISlider(
@@ -96,7 +97,7 @@ namespace SmartTank {
 				)
 			));
 			AddChild(new DialogGUIHorizontalLayout(
-				true, true, 2, boxPadding,
+				true, true, boxSpacing, boxPadding,
 				TextAnchor.MiddleLeft,
 
 				DeferTooltip(new DialogGUIToggle(
@@ -117,18 +118,36 @@ namespace SmartTank {
 					tooltipText = "smartTank_HideNonProceduralFuelTanksTooltip"
 				})
 			));
-			AddChild(new DialogGUIHorizontalLayout(
-				TextAnchor.MiddleLeft,
+			visibleTexture = new DialogGUIImage(
+				new Vector2(textureWidth, textureHeight), new Vector2(0, 0), Color.white,
+				nameToTexture(Settings.Instance.DefaultTexture)
+			);
+			AddChild(new DialogGUIBox(
+				"", windowWidth - 2 * padding, textureHeight + 2 * padding, null,
 
-				new DialogGUILabel("smartTank_DefaultTexturePrompt", leftColWidth),
-				DeferTooltip(new DialogGUIChooseOption(
-					textureList,
-					() => Settings.Instance.DefaultTexture,
-					(string s) => { Settings.Instance.DefaultTexture = s; },
-					windowWidth - leftColWidth - 2 * padding
-				) {
-					tooltipText = "smartTank_DefaultTextureTooltip"
-				})
+				new DialogGUIHorizontalLayout(
+					true, false, 4, boxPadding,
+					TextAnchor.MiddleLeft,
+
+					new DialogGUIVerticalLayout(
+						true, false, padding, noPadding,
+						TextAnchor.UpperLeft,
+
+						new DialogGUILabel("smartTank_DefaultTexturePrompt", leftColWidth),
+						DeferTooltip(new DialogGUIChooseOption(
+							textureList,
+							() => Settings.Instance.DefaultTexture,
+							(string s) => {
+								Settings.Instance.DefaultTexture = s;
+								visibleTexture.uiItem.GetComponent<RawImage>().texture = nameToTexture(s);
+							}
+						) {
+							tooltipText = "smartTank_DefaultTextureTooltip"
+						}),
+						new DialogGUIFlexibleSpace()
+					),
+					visibleTexture
+				)
 			));
 
 			AddChild(new DialogGUISpace(padding));
@@ -137,26 +156,31 @@ namespace SmartTank {
 				new DialogGUIButton(
 					"smartTank_CloseButtonText",
 					() => { close(); },
-					200f, -1f,
+					200, -1,
 					false
 				),
 				new DialogGUIFlexibleSpace()
 			));
 		}
 
-		private const  float      leftColWidth    = 90f;
+		private const  float      leftColWidth    = 90;
 		private const  float      rightColWidth   = 1.5f * leftColWidth;
-		private const  float      textFieldHeight = 25f;
+		private const  float      textFieldHeight = 25;
 		private const  float      boxWidth        = leftColWidth + rightColWidth;
-		private const  float      boxHeight       = 5f * textFieldHeight;
+		private const  float      boxHeight       = 5 * textFieldHeight;
 		private const  float      boxSpacing      = 2;
 		private const  int        padding         = 10;
 		private static RectOffset boxPadding      = new RectOffset(padding, padding, padding, padding);
 		private static RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
+		private static RectOffset noPadding       = new RectOffset(0, 0, 0, 0);
 		private const  float      windowWidth     = 2 * boxWidth + 2 * padding;
+		private const  float      textureWidth    = 200;
+		private const  float      textureHeight   = textureWidth;
 
 		private static string[]   planetList      = null;
 		private static string[]   textureList     = null;
+
+		private DialogGUIImage visibleTexture;
 
 		private void getPlanetList()
 		{
@@ -176,7 +200,7 @@ namespace SmartTank {
 		{
 			if (textureList == null) {
 				List<string> options = new List<string>();
-				ConfigNode[] nodes =  GameDatabase.Instance.GetConfigNodes("STRETCHYTANKTEXTURES");
+				ConfigNode[] nodes = GameDatabase.Instance.GetConfigNodes("STRETCHYTANKTEXTURES");
 				for (int n = 0; n < nodes.Length; ++n) {
 					ConfigNode textureInfo = nodes[n];
 					for (int t = 0; t < textureInfo.nodes.Count; ++t) {
@@ -184,8 +208,22 @@ namespace SmartTank {
 					}
 				}
 				options.Sort();
-				textureList = options.ToArray();
+				textureList = options.Distinct().ToArray();
 			}
+		}
+
+		private static Texture nameToTexture(string name)
+		{
+			ConfigNode[] nodes = GameDatabase.Instance.GetConfigNodes("STRETCHYTANKTEXTURES");
+			for (int n = 0; n < nodes.Length; ++n) {
+				ConfigNode textureInfo = nodes[n];
+				for (int t = 0; t < textureInfo.nodes.Count; ++t) {
+					if (name == textureInfo.nodes[t].name) {
+						return GameDatabase.Instance.GetTexture(textureInfo.nodes[t].GetNode("sides").GetValue("texture"), false);
+					}
+				}
+			}
+			return null;
 		}
 
 		private PopupDialog dialog;

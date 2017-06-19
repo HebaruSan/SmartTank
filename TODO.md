@@ -28,4 +28,3 @@
 
 - [ ] Propagate right click settings across all tanks in a stage
   - [ ] Or use global settings as tiebreakers
-- [ ] Display texture in settings

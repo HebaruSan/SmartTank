@@ -307,7 +307,7 @@ namespace SmartTank {
 		{
 			if (FlightGlobals.Bodies != null) {
 				BaseField field = Fields["BodyForTWR"];
-	            UI_ChooseOption range = (UI_ChooseOption)field.uiControlEditor;
+				UI_ChooseOption range = (UI_ChooseOption)field.uiControlEditor;
 				if (range != null) {
 					getPlanetList();
 					range.onFieldChanged = bodyChanged;
