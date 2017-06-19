@@ -49,7 +49,9 @@ namespace SmartTank {
 					SimManager.Mach = 0;
 					SimManager.RequestSimulation();
 					SimManager.TryStartSimulation();
-				} catch (Exception e) {
+				} catch (Exception ex) {
+					print($"Exception while updating SmartTank: {ex.Message}");
+					print($"{ex.StackTrace}");
 				}
 			}
 		}

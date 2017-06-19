@@ -35,15 +35,21 @@ namespace SmartTank {
 
 		public void HideNonProceduralFuelTanksChanged()
 		{
+			PartCategories fromCat, toCat;
+			if (HideNonProceduralFuelTanks) {
+				fromCat = PartCategories.FuelTank;
+   				toCat   = PartCategories.none;
+			} else {
+				fromCat = PartCategories.none;
+				toCat   = PartCategories.FuelTank;
+			}
 			List<AvailablePart> parts = PartLoader.LoadedPartsList;
 			for (int p = 0; p < parts.Count; ++p) {
-				if (!parts[p].partPrefab.HasModule<ProceduralPart>()) {
+				if (!parts[p].partPrefab.HasModule<ProceduralPart>()
+						&& parts[p].category == fromCat) {
 					for (int r = 0; r < parts[p].resourceInfos.Count; ++r) {
 						if (parts[p].resourceInfos[r].resourceName == fuelResourceName) {
-							parts[p].category =
-								HideNonProceduralFuelTanks
-								? PartCategories.none
-								: PartCategories.FuelTank;
+							parts[p].category = toCat;
 							break;
 						}
 					}
