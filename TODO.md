@@ -7,21 +7,24 @@
 - [ ] Auto scaling stops working in certain cases
 - [ ] KER fails to calculate in some crossfeed configurations
 - [ ] Freeze on re-root
+- [ ] Attached parts rendered with offset from joint in some symmetry configurations
 
 ## Calculation
 
 - [ ] Get precise diameters if next to other procedural parts
 
-## More fuels
+## Auto size more procedural parts
 
 - [ ] Solid fuel
 - [ ] Xenon / Electric Charge
 - [ ] Monopropellant
+- [ ] Decouplers
 
 ## Code style
 
 - [ ] Get the density numbers cleanly
 - [ ] Search the AttachNodes properly
+- [ ] Make my statics readonly
 
 ## UI clean-up
 

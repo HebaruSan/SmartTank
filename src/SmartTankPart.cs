@@ -21,19 +21,26 @@ namespace SmartTank {
 			Atmospheric      = Settings.Instance.Atmospheric;
 			targetTWR        = Settings.Instance.TargetTWR;
 			AutoScale        = Settings.Instance.AutoScale;
+
+			// Set the texture for the preview part in the parts list and newly placed parts
+			SetTexture();
 		}
 
-		public void Start()
+		public override void OnStart(StartState state)
 		{
-			initializeBodies();
-			bodyChanged(null, null);
-			initializeAutoScale();
-			autoScaleChanged(null, null);
-			initializeDiameter();
-			diameterChanged(null, null);
-			SetTexture();
-			// Update won't get called without this
-			isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
+			base.OnStart(state);
+
+			if (state == StartState.Editor) {
+				initializeBodies();
+				bodyChanged(null, null);
+				initializeAutoScale();
+				autoScaleChanged(null, null);
+				initializeDiameter();
+				diameterChanged(null, null);
+
+				// Update won't get called without this
+				isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
+			}
 		}
 
 		private void SetTexture()
