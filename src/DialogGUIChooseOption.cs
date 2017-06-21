@@ -19,11 +19,11 @@ namespace SmartTank {
 				new DialogGUIButton(
 					"<<",
 					PreviousSelection,
-					-1, height - 2 * outerBorder,
+					buttonWidth, height - 2 * outerBorder,
 					false
 				),
 				new DialogGUIVerticalLayout(
-					-1, height - 5, 0, new RectOffset(0, 0, 0, 0), TextAnchor.MiddleCenter,
+					-1, height - 5, 0, noPadding, TextAnchor.MiddleCenter,
 
 					new DialogGUIContentSizer(
 						ContentSizeFitter.FitMode.Unconstrained,
@@ -42,17 +42,19 @@ namespace SmartTank {
 				new DialogGUIButton(
 					">>",
 					NextSelection,
-					-1, height - 2 * outerBorder,
+					buttonWidth, height - 2 * outerBorder,
 					false
 				)
 			));
 		}
 
-		private const int outerBorder = 1;
+		private const           int        outerBorder = 1;
+		private const           int        buttonWidth = 20;
+		private static readonly RectOffset noPadding   = new RectOffset(0, 0, 0, 0);
 
-		private string[]         choices;
-		private Func<string>     getChoice;
-		private Callback<string> setChoice;
+		private string[]          choices;
+		private Func<string>      getChoice;
+		private Callback<string>  setChoice;
 
 		private float GetSelection()
 		{
