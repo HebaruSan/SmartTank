@@ -27,11 +27,11 @@ namespace SmartTank {
 			ConfigNode.CreateConfigFromObject(this, new ConfigNode(GetType().Name)).Save(path);
 		}
 
-		private const  string   settingsSuffix = "settings";
-		private static string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
-		public static  Settings Instance { get; private set; } = new Settings();
+		private const           string   settingsSuffix   = "settings";
+		private static readonly string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
+		public  static readonly Settings Instance         = new Settings();
 
-		private const  string   fuelResourceName = "LiquidFuel";
+		private const           string   fuelResourceName = "LiquidFuel";
 
 		public void HideNonProceduralFuelTanksChanged()
 		{

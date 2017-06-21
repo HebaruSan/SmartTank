@@ -24,7 +24,6 @@
 
 - [ ] Get the density numbers cleanly
 - [ ] Search the AttachNodes properly
-- [ ] Make my statics readonly
 
 ## UI clean-up
 

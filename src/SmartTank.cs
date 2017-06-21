@@ -25,9 +25,7 @@ namespace SmartTank {
 		/// </summary>
 		public const string Name = "SmartTank";
 
-		private static bool ProceduralPartsInstalled = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "ProceduralParts");
-
-		public static float configuredTWR = 1.5f;
+		private static readonly bool ProceduralPartsInstalled = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "ProceduralParts");
 
 		/// <summary>
 		/// This is called at creation

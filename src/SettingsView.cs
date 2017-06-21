@@ -163,22 +163,22 @@ namespace SmartTank {
 			));
 		}
 
-		private const  float      leftColWidth    = 90;
-		private const  float      rightColWidth   = 1.5f * leftColWidth;
-		private const  float      textFieldHeight = 25;
-		private const  float      boxWidth        = leftColWidth + rightColWidth;
-		private const  float      boxHeight       = 5 * textFieldHeight;
-		private const  float      boxSpacing      = 2;
-		private const  int        padding         = 10;
-		private static RectOffset boxPadding      = new RectOffset(padding, padding, padding, padding);
-		private static RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
-		private static RectOffset noPadding       = new RectOffset(0, 0, 0, 0);
-		private const  float      windowWidth     = 2 * boxWidth + 2 * padding;
-		private const  float      textureWidth    = 200;
-		private const  float      textureHeight   = textureWidth;
+		private const           float      leftColWidth    = 90;
+		private const           float      rightColWidth   = 1.5f * leftColWidth;
+		private const           float      textFieldHeight = 25;
+		private const           float      boxWidth        = leftColWidth + rightColWidth;
+		private const           float      boxHeight       = 5 * textFieldHeight;
+		private const           float      boxSpacing      = 2;
+		private const           int        padding         = 10;
+		private static readonly RectOffset boxPadding      = new RectOffset(padding, padding, padding, padding);
+		private static readonly RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
+		private static readonly RectOffset noPadding       = new RectOffset(0, 0, 0, 0);
+		private const           float      windowWidth     = 2 * boxWidth + 2 * padding;
+		private const           float      textureWidth    = 200;
+		private const           float      textureHeight   = textureWidth;
 
-		private static string[]   planetList      = null;
-		private static string[]   textureList     = null;
+		private static          string[]   planetList      = null;
+		private static          string[]   textureList     = null;
 
 		private DialogGUIImage visibleTexture;
 

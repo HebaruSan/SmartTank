@@ -13,10 +13,10 @@ namespace SmartTank {
 		private const ApplicationLauncher.AppScenes VisibleInScenes =
 			ApplicationLauncher.AppScenes.VAB |
 			ApplicationLauncher.AppScenes.SPH;
-		private static string    AppIconPath  = $"{SmartTank.Name}/{SmartTank.Name}";
-		private static Texture2D AppIcon      = GameDatabase.Instance.GetTexture(AppIconPath, false);
-		private static string    tooltipTitle = Localizer.Format("smartTank_SettingsTitle", SmartTank.Name);
-		private static string    tooltipText  = "smartTank_SettingsTooltip";
+		private static readonly string    AppIconPath  = $"{SmartTank.Name}/{SmartTank.Name}";
+		private static readonly Texture2D AppIcon      = GameDatabase.Instance.GetTexture(AppIconPath, false);
+		private static readonly string    tooltipTitle = Localizer.Format("smartTank_SettingsTitle", SmartTank.Name);
+		private static readonly string    tooltipText  = "smartTank_SettingsTooltip";
 
 		private ApplicationLauncherButton launcher;
 
