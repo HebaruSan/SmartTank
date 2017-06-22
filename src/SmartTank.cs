@@ -10,6 +10,8 @@ using ProceduralParts;
 
 namespace SmartTank {
 
+	using static ShipIntegrity;
+
 	// Convert from en-UK to en-US
 	using MonoBehavior = UnityEngine.MonoBehaviour;
 
@@ -69,6 +71,8 @@ namespace SmartTank {
 		/// </summary>
 		private void OnSimUpdate()
 		{
+			string nodesErr = "";
+			getNodeStructureError(ref nodesErr);
 			double totalMassChange = 0;
 
 			for (int st = 0; st < SimManager.Stages.Length; ++st) {
@@ -112,6 +116,7 @@ namespace SmartTank {
 						targetFuelMass -= nonProceduralFuelMass;
 						// Distribute the mass in the same proportions as it is now
 						for (int t = 0; t < numTanks; ++t) {
+							stage.drainedTanks[t].nodesError = nodesErr;
 							stage.drainedTanks[t].IdealWetMass = targetFuelMass * stage.drainedTanks[t].part.GetResourceMass() / massSum;
 						}
 					}

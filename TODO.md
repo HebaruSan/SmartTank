@@ -1,13 +1,27 @@
-# TODO
+# Before release
 
 ## Fixes
 
-- [ ] Oscillating big/tiny tanks in stage-and-a-half configurations
-- [ ] Flickering of tank sizes
-- [ ] Auto scaling stops working in certain cases
-- [ ] KER fails to calculate in some crossfeed configurations
 - [ ] Freeze on re-root
 - [ ] Attached parts rendered with offset from joint in some symmetry configurations
+
+## Code style
+
+- [ ] Get the density numbers cleanly
+
+## Release bookkeeping
+
+- [ ] XML documentation
+- [ ] Record / edit / upload demonstration video
+- [ ] Write README
+- [ ] Push to Github
+- [ ] Add to CKAN
+
+# After release
+
+## Fixes
+
+- [ ] Update texture in parts list when default changes
 
 ## Calculation
 
@@ -19,13 +33,4 @@
 - [ ] Xenon / Electric Charge
 - [ ] Monopropellant
 - [ ] Decouplers
-
-## Code style
-
-- [ ] Get the density numbers cleanly
-- [ ] Search the AttachNodes properly
-
-## UI clean-up
-
-- [ ] Propagate right click settings across all tanks in a stage
-  - [ ] Or use global settings as tiebreakers
+- [ ] Fueled nosecones

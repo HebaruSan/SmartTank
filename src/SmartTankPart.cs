@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace SmartTank {
 		{
 			base.OnStart(state);
 
+			isEnabled = enabled = false;
 			if (state == StartState.Editor) {
 				initializeBodies();
 				bodyChanged(null, null);
@@ -38,16 +40,32 @@ namespace SmartTank {
 				initializeDiameter();
 				diameterChanged(null, null);
 
-				// Update won't get called without this
-				isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
+				// Wait 1 second before initializing so ProceduralPart modules
+				// have a chance to re-init after a revert
+				StartCoroutine(after(1, () => {
+					print($"Enabling SmartTankPart");
+					// Update won't get called without this
+					isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
+				}));
+			}
+		}
+
+		private IEnumerator after(float seconds, Callback cb)
+		{
+			while (true) {
+				yield return new WaitForSeconds(seconds);
+				cb();
+				yield break;
 			}
 		}
 
 		private void SetTexture()
 		{
-			if (part.HasModule<ProceduralPart>()) {
+			if (part != null && part.HasModule<ProceduralPart>()) {
 				ProceduralPart pp = part.GetModule<ProceduralPart>();
-				pp.textureSet = Settings.Instance.DefaultTexture;
+				if (pp != null) {
+					pp.textureSet = Settings.Instance.DefaultTexture;
+				}
 			}
 		}
 
@@ -154,24 +172,29 @@ namespace SmartTank {
 
 		private AttachNode ReallyFindOpposingNode(AttachNode an)
 		{
-			Part opposingPart = an?.attachedPart;
-			if (opposingPart != null) {
-				for (int i = 0; i < (opposingPart?.attachNodes?.Count ?? 0); ++i) {
-					AttachNode otherNode = opposingPart.attachNodes[i];
-					if (an.owner == otherNode.attachedPart) {
-						return otherNode;
+			if (an != null) {
+				Part opposingPart = an.attachedPart;
+				if (opposingPart != null) {
+					for (int i = 0; i < (opposingPart?.attachNodes?.Count ?? 0); ++i) {
+						AttachNode otherNode = opposingPart.attachNodes[i];
+						if (an.owner == otherNode.attachedPart) {
+							return otherNode;
+						}
 					}
 				}
-			}
 
-			for (int p = 0; p < EditorLogic.fetch.ship.parts.Count; ++p) {
-				Part otherPart = EditorLogic.fetch.ship.parts[p];
-				for (int n = 0; n < (otherPart?.attachNodes?.Count ?? 0); ++n) {
-					AttachNode otherNode = otherPart.attachNodes[n];
-					if (an.owner == otherNode.attachedPart
+				List<Part> parts = EditorLogic?.fetch?.ship?.parts;
+				if (parts != null) {
+					for (int p = 0; p < parts.Count; ++p) {
+						Part otherPart = parts[p];
+						for (int n = 0; n < (otherPart?.attachNodes?.Count ?? 0); ++n) {
+							AttachNode otherNode = otherPart.attachNodes[n];
+							if (an.owner == otherNode.attachedPart
 							&& otherNode.nodeType == AttachNode.NodeType.Stack
 							&& an.id != otherNode.id) {
-						return otherNode;
+								return otherNode;
+							}
+						}
 					}
 				}
 			}
@@ -242,17 +265,6 @@ namespace SmartTank {
 				if (an?.attachedPart?.HasModule<ModuleEngines>() ?? false) {
 					return an.attachedPart;
 				}
-				Part opown = an?.FindOpposingNode()?.owner;
-				if (opown?.HasModule<ModuleEngines>() ?? false) {
-					return opown;
-				}
-				List<Part> parts = new List<Part>();
-				part.attachNodes[n].FindAttachedPart(parts);
-				for (int p = 0; p < parts.Count; ++p) {
-					if (parts[p].HasModule<ModuleEngines>()) {
-						return parts[p];
-					}
-				}
 			}
 			return null;
 		}
@@ -276,6 +288,14 @@ namespace SmartTank {
 			guiActiveEditor = false
 		)]
 		public int DrainStage = -1;
+
+		[KSPField(
+			guiName         = "Nodes error",
+			isPersistant    = false,
+			guiActive       = false,
+			guiActiveEditor = false
+		)]
+		public string nodesError;
 
 		[KSPField(
 			guiName         = "smartTank_IdealWetMassPrompt",
@@ -412,16 +432,22 @@ namespace SmartTank {
 
 		public void Update()
 		{
-			if (DiameterMatching) {
-				MatchDiameters();
-			}
-			if (FuelMatching) {
-				MatchFuel();
-			}
-			if (AutoScale) {
-				ScaleNow();
-			} else {
-				allowResourceEditing(true);
+			if (enabled && isEnabled && HighLogic.LoadedSceneIsEditor) {
+				if (DiameterMatching) {
+					MatchDiameters();
+				}
+				if (FuelMatching) {
+					MatchFuel();
+				}
+				if (part.HasModule<TankContentSwitcher>()) {
+					part.GetModule<TankContentSwitcher>().Fields["tankType"].guiActiveEditor = !FuelMatching;
+				}
+				if (AutoScale) {
+					ScaleNow();
+				}
+				allowResourceEditing(!AutoScale);
+
+				Fields["nodesError"].guiActiveEditor = (nodesError.Length > 0);
 			}
 		}
 
@@ -444,64 +470,71 @@ namespace SmartTank {
 		)]
 		public void ScaleNow()
 		{
-			allowResourceEditing(false);
-			// These values live in ProceduralParts's cfg files, but they're hidden from us.
-			// Multiply the volume in m^3 by this to get the dry mass in tons:
-			const double dryDensity = 0.1089;
-			// Multiply the dry mass by this to get the liquid fuel units:
-			const double lfUnitsPerT = 720;
-			// Multiply the dry mass by this to get the oxidizer units:
-			const double oxUnitsPerT = 880;
-			// Multiply lf or ox units by this to get the fuel mass in tons:
-			const double fuelMassPerUnit = 0.005;
-			// Multiply volume by this to get the mass of fuel:
-			const double fuelDensity = fuelMassPerUnit * (lfUnitsPerT + oxUnitsPerT) * dryDensity;
-			// Multiply volume by this to get the wet mass:
-			const double wetDensity = dryDensity + fuelDensity;
-			// Volume of fuel to use:
-			double idealVolume = IdealWetMass / wetDensity;
+			if (HighLogic.LoadedSceneIsEditor) {
+				// These values live in ProceduralParts's cfg files, but they're hidden from us.
+				// Multiply the volume in m^3 by this to get the dry mass in tons:
+				const double dryDensity = 0.1089;
+				// Multiply the dry mass by this to get the liquid fuel units:
+				const double lfUnitsPerT = 720;
+				// Multiply the dry mass by this to get the oxidizer units:
+				const double oxUnitsPerT = 880;
+				// Multiply lf or ox units by this to get the fuel mass in tons:
+				const double fuelMassPerUnit = 0.005;
+				// Multiply volume by this to get the mass of fuel:
+				const double fuelDensity = fuelMassPerUnit * (lfUnitsPerT + oxUnitsPerT) * dryDensity;
+				// Multiply volume by this to get the wet mass:
+				const double wetDensity = dryDensity + fuelDensity;
+				// Volume of fuel to use:
+				double idealVolume = IdealWetMass / wetDensity;
 
-			if (part.HasModule<ProceduralShapeCylinder>()) {
-				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
-				double radius = 0.5 * cyl.diameter;
-				double crossSectionArea = Math.PI * radius * radius;
-				double idealLength = idealVolume / crossSectionArea;
-				if (idealLength < radius) {
-					idealLength = radius;
+				if (part.HasModule<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+					double radius = 0.5 * cyl.diameter;
+					double crossSectionArea = Math.PI * radius * radius;
+					double idealLength = idealVolume / crossSectionArea;
+					if (idealLength < radius) {
+						idealLength = radius;
+					}
+					if (Math.Abs(cyl.length - idealLength) > 0.05) {
+						cyl.length = (float)idealLength;
+						if (part.GetModule<ProceduralPart>().shapeName == "Cylinder") {
+							cyl.Update();
+						}
+					}
 				}
-				if (Math.Abs(cyl.length - idealLength) > 0.05) {
-					cyl.length = (float)idealLength;
+				if (part.HasModule<ProceduralShapePill>()) {
+					// We won't try to change the "fillet", so we can treat it as a constant
+					// Diameter is likewise a constant here
+					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+					double fillet = pil.fillet, diameter = pil.diameter;
+					double idealLength = (idealVolume * 24f / Math.PI - (10f - 3f * Math.PI) * fillet * fillet * fillet - 3f * (Math.PI - 4) * diameter * fillet * fillet) / (6f * diameter * diameter);
+					if (idealLength < 1) {
+						idealLength = 1;
+					}
+					if (Math.Abs(pil.length - idealLength) > 0.05) {
+						pil.length = (float)idealLength;
+						if (part.GetModule<ProceduralPart>().shapeName == "Pill") {
+							pil.Update();
+						}
+					}
 				}
+				if (part.HasModule<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+					double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
+					double idealLength = idealVolume * 12f / (Math.PI * (topDiameter * topDiameter + topDiameter * bottomDiameter + bottomDiameter * bottomDiameter));
+					if (idealLength < 1) {
+						idealLength = 1;
+					}
+					if (Math.Abs(con.length - idealLength) > 0.05) {
+						con.length = (float)idealLength;
+						if (part.GetModule<ProceduralPart>().shapeName == "Cone") {
+							con.Update();
+						}
+					}
+				}
+				// BezierCone shapes not supported because they're too complicated.
+				// See ProceduralShapeBezierCone.CalcVolume to see why.
 			}
-
-			if (part.HasModule<ProceduralShapePill>()) {
-				// We won't try to change the "fillet", so we can treat it as a constant
-				// Diameter is likewise a constant here
-				ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
-				double fillet = pil.fillet, diameter = pil.diameter;
-				double idealLength = (idealVolume * 24f / Math.PI - (10f - 3f * Math.PI) * fillet * fillet * fillet - 3f * (Math.PI - 4) * diameter * fillet * fillet) / (6f * diameter * diameter);
-				if (idealLength < 1) {
-					idealLength = 1;
-				}
-				if (Math.Abs(pil.length - idealLength) > 0.05) {
-					pil.length = (float)idealLength;
-				}
-			}
-
-			if (part.HasModule<ProceduralShapeCone>()) {
-				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
-				double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
-				double idealLength = idealVolume * 12f / (Math.PI * (topDiameter * topDiameter + topDiameter * bottomDiameter + bottomDiameter * bottomDiameter));
-				if (idealLength < 1) {
-					idealLength = 1;
-				}
-				if (Math.Abs(con.length - idealLength) > 0.05) {
-					con.length = (float)idealLength;
-				}
-			}
-
-			// BezierCone shapes not supported because they're too complicated.
-			// See ProceduralShapeBezierCone.CalcVolume to see why.
 		}
 
 	}
