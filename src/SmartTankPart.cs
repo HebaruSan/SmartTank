@@ -39,6 +39,7 @@ namespace SmartTank {
 				autoScaleChanged(null, null);
 				initializeDiameter();
 				diameterChanged(null, null);
+				getFuelInfo(part.GetModule<TankContentSwitcher>().tankType);
 
 				// Wait 1 second before initializing so ProceduralPart modules
 				// have a chance to re-init after a revert
@@ -102,7 +103,7 @@ namespace SmartTank {
 				}
 				if (part.HasModule<ProceduralShapePill>()) {
 					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
-					pil.Fields["length"].guiActiveEditor = value;
+					pil.Fields["diameter"].guiActiveEditor = value;
 				}
 				if (part.HasModule<ProceduralShapeCone>()) {
 					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
@@ -242,6 +243,7 @@ namespace SmartTank {
 		)]
 		public bool FuelMatching = Settings.Instance.FuelMatching;
 
+		// TODO - get this on the fly from the ConfigNodes
 		private const string LfOxTypeName = "Mixed";
 
 		private string EngineTankType(Part enginePart)
@@ -277,6 +279,7 @@ namespace SmartTank {
 				string tankType = EngineTankType(findEngine());
 				if (tcs.tankType != tankType) {
 					tcs.tankType = tankType;
+					getFuelInfo(tankType);
 				}
 			}
 		}
@@ -462,6 +465,48 @@ namespace SmartTank {
 			}
 		}
 
+		private class FuelInfo : TankContentSwitcher.TankTypeOption {
+
+			public FuelInfo(ConfigNode fuelNode) : base()
+			{
+				if (fuelNode != null) {
+					Load(fuelNode);
+
+					// Multiply dry mass by this to get number of units of Lf+Ox
+					double totalUnitsPerT = 0;
+					for (int r = 0; r < resources.Count; ++r) {
+						totalUnitsPerT += resources[r].unitsPerT;
+					}
+
+					// Multiply volume by this to get the mass of fuel:
+					double fuelDensity = fuelMassPerUnit * totalUnitsPerT * dryDensity;
+					wetDensity         = dryDensity + fuelDensity;
+				}
+			}
+
+			// Multiply volume by this to get the wet mass:
+			public  readonly double wetDensity;
+
+			// Multiply lf or ox units by this to get the fuel mass in tons:
+			private const    double fuelMassPerUnit = 0.005;
+		}
+
+		private double wetDensity;
+
+		private ConfigNode getFuelNode(string optionName)
+		{
+			return part?.partInfo?.partConfig?.GetNode("MODULE", "name", "TankContentSwitcher")?.GetNode("TANK_TYPE_OPTION", "name", optionName);
+		}
+
+		private void getFuelInfo(string optionName)
+		{
+			FuelInfo fuelType = new FuelInfo(getFuelNode(optionName));
+			if (fuelType != null) {
+				// Multiply volume by this to get the wet mass:
+				wetDensity = fuelType.wetDensity;
+			}
+		}
+
 		[KSPEvent(
 			guiName         = "smartTank_ScaleNowPrompt",
 			guiActive       = false,
@@ -470,20 +515,7 @@ namespace SmartTank {
 		)]
 		public void ScaleNow()
 		{
-			if (HighLogic.LoadedSceneIsEditor) {
-				// These values live in ProceduralParts's cfg files, but they're hidden from us.
-				// Multiply the volume in m^3 by this to get the dry mass in tons:
-				const double dryDensity = 0.1089;
-				// Multiply the dry mass by this to get the liquid fuel units:
-				const double lfUnitsPerT = 720;
-				// Multiply the dry mass by this to get the oxidizer units:
-				const double oxUnitsPerT = 880;
-				// Multiply lf or ox units by this to get the fuel mass in tons:
-				const double fuelMassPerUnit = 0.005;
-				// Multiply volume by this to get the mass of fuel:
-				const double fuelDensity = fuelMassPerUnit * (lfUnitsPerT + oxUnitsPerT) * dryDensity;
-				// Multiply volume by this to get the wet mass:
-				const double wetDensity = dryDensity + fuelDensity;
+			if (HighLogic.LoadedSceneIsEditor && wetDensity > 0) {
 				// Volume of fuel to use:
 				double idealVolume = IdealWetMass / wetDensity;
 

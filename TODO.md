@@ -4,10 +4,7 @@
 
 - [ ] Freeze on re-root
 - [ ] Attached parts rendered with offset from joint in some symmetry configurations
-
-## Code style
-
-- [ ] Get the density numbers cleanly
+- [ ] Test w/ gravity cheat
 
 ## Release bookkeeping
 
