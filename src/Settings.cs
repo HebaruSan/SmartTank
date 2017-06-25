@@ -33,10 +33,10 @@ namespace SmartTank {
 
 		private const           string   fuelResourceName = "LiquidFuel";
 
-		public void HideNonProceduralFuelTanksChanged()
+		public void HideNonProceduralPartsChanged()
 		{
 			PartCategories fromCat, toCat;
-			if (HideNonProceduralFuelTanks) {
+			if (HideNonProceduralParts) {
 				fromCat = PartCategories.FuelTank;
    				toCat   = PartCategories.none;
 			} else {
@@ -45,12 +45,27 @@ namespace SmartTank {
 			}
 			List<AvailablePart> parts = PartLoader.LoadedPartsList;
 			for (int p = 0; p < parts.Count; ++p) {
-				if (!parts[p].partPrefab.HasModule<ProceduralPart>()
-						&& parts[p].category == fromCat) {
-					for (int r = 0; r < parts[p].resourceInfos.Count; ++r) {
-						if (parts[p].resourceInfos[r].resourceName == fuelResourceName) {
-							parts[p].category = toCat;
-							break;
+				Part pref = parts[p].partPrefab;
+				if (!pref.HasModule<ProceduralPart>()) {
+					// Fuel tanks, excluding engines and wings
+					// Note, the Mk2 spaceplane tanks are Propulsion instead of FuelTank
+					if (parts[p].category == fromCat) {
+						for (int r = 0; r < parts[p].resourceInfos.Count; ++r) {
+							if (parts[p].resourceInfos[r].resourceName == fuelResourceName) {
+								parts[p].category = toCat;
+								break;
+							}
+						}
+					}
+					// Decouplers, excluding head shields and pylons
+					if (pref.HasModule<ModuleDecouple>()
+							&& !pref.HasModule<ModuleJettison>()) {
+						if (HideNonProceduralParts) {
+							if (parts[p].category == PartCategories.Coupling) {
+								parts[p].category = PartCategories.none;
+							}
+						} else {
+							parts[p].category = PartCategories.Coupling;
 						}
 					}
 				}
@@ -64,7 +79,7 @@ namespace SmartTank {
 		[Persistent] public bool   FuelMatching               = true;
 		[Persistent] public bool   AutoScale                  = true;
 		[Persistent] public bool   Atmospheric                = true;
-		[Persistent] public bool   HideNonProceduralFuelTanks = true;
+		[Persistent] public bool   HideNonProceduralParts     = true;
 		[Persistent] public string BodyForTWR                 = Planetarium?.fetch?.Home?.name ?? "Kerbin";
 		[Persistent] public string DefaultTexture             = "Original";
 		[Persistent] public float  TargetTWR                  = 1.5f;

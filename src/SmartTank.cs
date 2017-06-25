@@ -36,7 +36,7 @@ namespace SmartTank {
 		{
 			if (ProceduralPartsInstalled) {
 				SimManager.OnReady += OnSimUpdate;
-				Settings.Instance.HideNonProceduralFuelTanksChanged();
+				Settings.Instance.HideNonProceduralPartsChanged();
 			}
 		}
 

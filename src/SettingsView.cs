@@ -108,11 +108,11 @@ namespace SmartTank {
 					tooltipText = "smartTank_FuelMatchingTooltip"
 				}),
 				DeferTooltip(new DialogGUIToggle(
-					() => Settings.Instance.HideNonProceduralFuelTanks,
+					() => Settings.Instance.HideNonProceduralParts,
 					"smartTank_HideNonProceduralFuelTanksPrompt",
 					(bool b) => {
-						Settings.Instance.HideNonProceduralFuelTanks = b;
-						Settings.Instance.HideNonProceduralFuelTanksChanged();
+						Settings.Instance.HideNonProceduralParts = b;
+						Settings.Instance.HideNonProceduralPartsChanged();
 					}
 				) {
 					tooltipText = "smartTank_HideNonProceduralFuelTanksTooltip"

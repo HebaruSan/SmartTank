@@ -493,9 +493,14 @@ namespace SmartTank {
 
 		private double wetDensity;
 
+		private ConfigNode getContentSwitcher()
+		{
+			return part?.partInfo?.partConfig?.GetNode("MODULE", "name", "TankContentSwitcher");
+		}
+
 		private ConfigNode getFuelNode(string optionName)
 		{
-			return part?.partInfo?.partConfig?.GetNode("MODULE", "name", "TankContentSwitcher")?.GetNode("TANK_TYPE_OPTION", "name", optionName);
+			return getContentSwitcher().GetNode("TANK_TYPE_OPTION", "name", optionName);
 		}
 
 		private void getFuelInfo(string optionName)
