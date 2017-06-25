@@ -35,7 +35,13 @@ namespace SmartTank.Simulation
 		public double rcsMass = 0.0;
 		public double maxThrustToWeight = 0.0;
 		public int number = 0;
+		/// <summary>
+		/// Total thrust of this stage in atmosphere
+		/// </summary>
 		public double thrust = 0.0;
+		/// <summary>
+		/// Total thrust of this stage in vacuum
+		/// </summary>
 		public double vacuumThrust = 0.0;
 		public double thrustToWeight = 0.0;
 		public double time = 0.0;
@@ -50,6 +56,9 @@ namespace SmartTank.Simulation
 		public double thrustOffsetAngle = 0.0;
 		public float maxMach = 0.0f;
 
+		/// <summary>
+		/// List of the SmartTankPart modules for fuel tanks that drain in this stage.
+		/// </summary>
 		public List<SmartTankPart> drainedTanks = new List<SmartTankPart>();
 
 		public void Dump(LogMsg log)

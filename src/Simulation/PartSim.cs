@@ -70,6 +70,11 @@ namespace SmartTank.Simulation
 		public double startMass = 0d;
 		public String vesselName;
 		public VesselType vesselType;
+
+		/// <summary>
+		/// This part's SmartTankPart module, if any.
+		/// The SmartTank module uses this to tell it its ideal wet mass.
+		/// </summary>
 		public SmartTankPart smartTank;
 
 		private static PartSim Create()
@@ -147,6 +152,7 @@ namespace SmartTank.Simulation
 				if (log != null) log.AppendLine("Using part.mass of ", p.mass);
 			}
 
+			// Capture the SmartTankPart module if present so the SmartTank module can tell it its ideal wet mass later.
 			if (p.HasModule<SmartTankPart>()) {
 				partSim.smartTank = p.GetModule<SmartTankPart>();
 			} else {

@@ -124,9 +124,16 @@ namespace SmartTank {
 			}
 		}
 
-		// F = m * a
-		// F = mu * m / r^2
-		// a = F / m = mu / r^2
+		/// <summary>
+		/// Calculate the acceleration due to gravity at a body's surface.
+		///   F = m * a
+		///   F = mu * m / r^2
+		///   a = F / m = mu / r^2
+		/// </summary>
+		/// <param name="b">The CelestialBody to use</param>
+		/// <returns>
+		/// Acceleration in m/s/s
+		/// </returns>
 		public static double gravAccel(CelestialBody b)
 		{
 			return b.gravParameter / Math.Pow(b.Radius, 2);
@@ -136,6 +143,7 @@ namespace SmartTank {
 		/// Calculate the mass of fuel needed to achieve the desired TWR for a given thrust and dry mass.
 		/// </summary>
 		/// <param name="thrust">Thrust in kN</param>
+		/// <param name="gravAccel">Acceleration due to gravity opposing the thrust</param>
 		/// <param name="desiredTWR">Thrust weight ratio to aim for</param>
 		/// <param name="dryMass">Mass in metric tons that will be left when this stage's fuel is gone</param>
 		/// <returns>

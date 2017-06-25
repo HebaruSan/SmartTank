@@ -12,8 +12,17 @@ namespace SmartTank {
 
 	using static TooltipExtensions;
 
+	/// <summary>
+	/// DialogGUI*-based class to be shown in the VAB or SPH
+	/// when the user clicks our application launcher button.
+	/// Displays and edits the current values of the settings.
+	/// </summary>
 	public class SettingsView : DialogGUIVerticalLayout {
 
+		/// <summary>
+		/// Construct a settings view object.
+		/// </summary>
+		/// <param name="close">Callback to execute when user closes the view</param>
 		public SettingsView(UnityAction close)
 			: base(
 				windowWidth, -1, 2,
@@ -60,7 +69,7 @@ namespace SmartTank {
 
 						new DialogGUILabel("smartTank_SettingsTWRBoxTitle"),
 						new DialogGUIVerticalLayout(
-							padding, 1.8f * textFieldHeight, 0, noPadding,
+							bigPadding, 1.8f * textFieldHeight, 0, noPadding,
 							TextAnchor.MiddleCenter,
 
 							DeferTooltip(new DialogGUISlider(
@@ -123,14 +132,14 @@ namespace SmartTank {
 				nameToTexture(Settings.Instance.DefaultTexture)
 			);
 			AddChild(new DialogGUIBox(
-				"", windowWidth - 2 * padding, textureHeight + 2 * padding, null,
+				"", windowWidth - 2 * bigPadding, textureHeight + 2 * bigPadding, null,
 
 				new DialogGUIHorizontalLayout(
 					true, false, 4, boxPadding,
 					TextAnchor.MiddleLeft,
 
 					new DialogGUIVerticalLayout(
-						true, false, padding, noPadding,
+						true, false, bigPadding, noPadding,
 						TextAnchor.UpperLeft,
 
 						new DialogGUILabel("smartTank_DefaultTexturePrompt", leftColWidth),
@@ -150,7 +159,7 @@ namespace SmartTank {
 				)
 			));
 
-			AddChild(new DialogGUISpace(padding));
+			AddChild(new DialogGUISpace(bigPadding));
 			AddChild(new DialogGUIHorizontalLayout(
 				new DialogGUIFlexibleSpace(),
 				new DialogGUIButton(
@@ -169,11 +178,11 @@ namespace SmartTank {
 		private const           float      boxWidth        = leftColWidth + rightColWidth;
 		private const           float      boxHeight       = 5 * textFieldHeight;
 		private const           float      boxSpacing      = 2;
-		private const           int        padding         = 10;
-		private static readonly RectOffset boxPadding      = new RectOffset(padding, padding, padding, padding);
+		private const           int        bigPadding         = 10;
+		private static readonly RectOffset boxPadding      = new RectOffset(bigPadding, bigPadding, bigPadding, bigPadding);
 		private static readonly RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
 		private static readonly RectOffset noPadding       = new RectOffset(0, 0, 0, 0);
-		private const           float      windowWidth     = 2 * boxWidth + 2 * padding;
+		private const           float      windowWidth     = 2 * boxWidth + 2 * bigPadding;
 		private const           float      textureWidth    = 200;
 		private const           float      textureHeight   = textureWidth;
 
@@ -228,6 +237,13 @@ namespace SmartTank {
 
 		private PopupDialog dialog;
 
+		/// <summary>
+		/// Create a MultiOptionDialog containing this view
+		/// and display it on the screen.
+		/// </summary>
+		/// <returns>
+		/// The PopupDialog being displayed.
+		/// </returns>
 		public PopupDialog Show()
 		{
 			dialog = PopupDialog.SpawnPopupDialog(
@@ -246,6 +262,9 @@ namespace SmartTank {
 			return dialog;
 		}
 
+		/// <summary>
+		/// Save the settings and close the visible dialog, if any.
+		/// </summary>
 		public void Dismiss()
 		{
 			if (dialog != null) {

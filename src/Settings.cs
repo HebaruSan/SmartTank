@@ -22,17 +22,28 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Saves the current values of the properties to the setings file
+		/// </summary>
 		public void Save()
 		{
 			ConfigNode.CreateConfigFromObject(this, new ConfigNode(GetType().Name)).Save(path);
 		}
 
-		private const           string   settingsSuffix   = "settings";
-		private static readonly string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
+		/// <summary>
+		/// The singleton instance of this class.
+		/// Should be the only way other code accesses it.
+		/// </summary>
 		public  static readonly Settings Instance         = new Settings();
 
+		private const           string   settingsSuffix   = "settings";
+		private static readonly string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
 		private const           string   fuelResourceName = "LiquidFuel";
 
+		/// <summary>
+		/// Call after changing HideNonProceduralParts.
+		/// Shows/hides affected parts and refreshes the parts list.
+		/// </summary>
 		public void HideNonProceduralPartsChanged()
 		{
 			PartCategories fromCat, toCat;
@@ -75,14 +86,67 @@ namespace SmartTank {
 
 		// These are the actual settings.
 		// Access them via Settings.Instance.PropertyName.
+
+		/// <summary>
+		/// If true, automatically set the top and bottom diameters to match attached parts.
+		/// Includes switching between cylinder and cone if attached parts don't match.
+		/// Otherwise leave as-is for manual manipulation.
+		/// </summary>
 		[Persistent] public bool   DiameterMatching           = true;
+
+		/// <summary>
+		/// If true, automatically set the fuel contents to match attached engines.
+		/// E.g., LiquidFuel only for NERVA, or Lf+Ox for most others.
+		/// Otherwise leave as-is for manual manipulation.
+		/// </summary>
 		[Persistent] public bool   FuelMatching               = true;
+
+		/// <summary>
+		/// If true, automatically set the length to fit TWR.
+		/// Otherwise leave as-is for manual manipulation.
+		/// </summary>
 		[Persistent] public bool   AutoScale                  = true;
+
+		/// <summary>
+		/// If true, calculate the TWR based on the engine's thrust
+		/// at sea-level at the designated body.
+		/// Otherwise use vacuum thrust.
+		/// </summary>
 		[Persistent] public bool   Atmospheric                = true;
-		[Persistent] public bool   HideNonProceduralParts     = true;
+
+		/// <summary>
+		/// Name of body to use for calculating TWR.
+		/// </summary>
 		[Persistent] public string BodyForTWR                 = Planetarium?.fetch?.Home?.name ?? "Kerbin";
-		[Persistent] public string DefaultTexture             = "Original";
+
+		/// <summary>
+		/// Default thrust-to-weight ratio to use when calculating desired
+		/// size of tanks.
+		/// </summary>
 		[Persistent] public float  TargetTWR                  = 1.5f;
+
+		/// <summary>
+		/// If true, the
+		/// Be sure to call HideNonProceduralPartsChanged after changing this.
+		/// </summary>
+		[Persistent] public bool   HideNonProceduralParts     = true;
+
+		/// <summary>
+		/// Name of default texture to use for newly placed procedural fuel tanks.
+		/// Corresponds to ConfigNode data from a cfg file in this format:
+		///
+		/// STRETCHYTANKTEXTURES
+		/// {
+		///     NameOfTextureHere
+		///     {
+		///         sides
+		///         {
+		///             [Texture data here]
+		///         }
+		///     }
+		/// }
+		/// </summary>
+		[Persistent] public string DefaultTexture             = "Original";
 	}
 
 }

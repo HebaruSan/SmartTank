@@ -35,7 +35,13 @@ namespace SmartTank.Simulation
 
 		public double actualThrust = 0;
 		public bool isActive = false;
+		/// <summary>
+		/// Specific impulse of this engine in atmosphere.
+		/// </summary>
 		public double isp = 0;
+		/// <summary>
+		/// Specific impulse of this engine in vacuum.
+		/// </summary>
 		public double vacuumIsp = 0;
 		public PartSim partSim;
 		public List<AppliedForce> appliedForces = new List<AppliedForce>();
@@ -43,7 +49,13 @@ namespace SmartTank.Simulation
 		public bool isFlamedOut;
 		public bool dontDecoupleActive = true;
 
+		/// <summary>
+		/// Thrust of this engine in atmosphere.
+		/// </summary>
 		public double thrust = 0;
+		/// <summary>
+		/// Thrust of this engine in atmosphere.
+		/// </summary>
 		public double vacuumThrust = 0;
 
 		// Add thrust vector to account for directional losses

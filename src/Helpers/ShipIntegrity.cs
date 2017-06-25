@@ -4,10 +4,21 @@ using UnityEngine;
 
 namespace SmartTank {
 
+	/// <summary>
+	/// Ship integrity checks for DEBUG mode.
+	/// During development, I found that the AttachNode objects in my ship
+	/// tended to get corrupted if I called FindOpposingNode at the wrong time,
+	/// and these checks will detect those problems and make them visible in a
+	/// field on the procedural tanks.
+	/// Only in DEBUG mode!
+	/// </summary>
 	public static class ShipIntegrity {
 
 		private const string nullStr = "NULL";
 
+		/// <summary>
+		/// Print all the parts and attach nodes in the current ship.
+		/// </summary>
 		[System.Diagnostics.Conditional("DEBUG")]
 		public static void printAttachNodes()
 		{
@@ -34,6 +45,11 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Check the ship and return any errors in the parameter.
+		/// This is void so we can use the Conditional attribute.
+		/// </summary>
+		/// <param name="err">Will be set to the error if any, otherwise ""</param>
 		[System.Diagnostics.Conditional("DEBUG")]
 		public static void getNodeStructureError(ref string err)
 		{

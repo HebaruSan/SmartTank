@@ -7,6 +7,9 @@ namespace SmartTank {
 
 	using MonoBehavior = UnityEngine.MonoBehaviour;
 
+	/// <summary>
+	/// Plugin to add a application launcher button for our settings.
+	/// </summary>
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public class AppLauncher : MonoBehavior {
 
@@ -20,12 +23,20 @@ namespace SmartTank {
 
 		private ApplicationLauncherButton launcher;
 
+		/// <summary>
+		/// Called when entering VAB or SPH.
+		/// Enqueue our events for adding and removing or button.
+		/// </summary>
 		public void Start()
 		{
 			GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
 			GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveLauncher);
 		}
 
+		/// <summary>
+		/// Called when exiting VAB or SPH.
+		/// Remove our event handlers and our button.
+		/// </summary>
 		public void OnDisable()
 		{
 			GameEvents.onGUIApplicationLauncherReady.Remove(AddLauncher);

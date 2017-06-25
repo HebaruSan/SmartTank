@@ -7,10 +7,19 @@ using ProceduralParts;
 
 namespace SmartTank {
 
+	/// <summary>
+	/// Part module to:
+	///   - Auto set length based on TWR
+	///   - Set default texture
+	///   - Set fuel type based on attached engine resource consumption
+	/// </summary>
 	public class SmartTankPart : PartModule {
 
 		public SmartTankPart() : base() { }
 
+		/// <summary>
+		/// Called when part is initially created, including during game load
+		/// </summary>
 		public override void OnAwake()
 		{
 			base.OnAwake();
@@ -26,6 +35,10 @@ namespace SmartTank {
 			SetTexture();
 		}
 
+		/// <summary>
+		/// Called when the part is instantiated for use
+		/// </summary>
+		/// <param name="state">Description of when the part is being created</param>
 		public override void OnStart(StartState state)
 		{
 			base.OnStart(state);
@@ -66,6 +79,9 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Field to toggle whether to match fuel to engine
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_FuelMatchingPrompt",
 			isPersistant    = true,
@@ -76,7 +92,7 @@ namespace SmartTank {
 		)]
 		public bool FuelMatching = Settings.Instance.FuelMatching;
 
-		ConfigNode[] tankTypeOptions;
+		private ConfigNode[] tankTypeOptions;
 
 		private ConfigNode getContentSwitcher()
 		{
@@ -150,6 +166,9 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Debugging field to show in which stage this tank drains, hidden by default.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_DrainsInStagePrompt",
 			isPersistant    = false,
@@ -158,6 +177,10 @@ namespace SmartTank {
 		)]
 		public int DrainStage = -1;
 
+		/// <summary>
+		/// Debugging field to show structural problems with the ship.
+		/// Only visible if an error is found AND when compiled with DEBUG enabled.
+		/// </summary>
 		[KSPField(
 			guiName         = "Nodes error",
 			isPersistant    = false,
@@ -166,6 +189,10 @@ namespace SmartTank {
 		)]
 		public string nodesError;
 
+		/// <summary>
+		/// Field for the mass we should target when auto-sizing, hidden by default.
+		/// Set by the SmartTank ship-level module.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_IdealWetMassPrompt",
 			isPersistant    = false,
@@ -174,6 +201,9 @@ namespace SmartTank {
 		)]
 		public double IdealWetMass;
 
+		/// <summary>
+		/// Field for the body to use for TWR calculation.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_TWRAtPrompt",
 			isPersistant    = true,
@@ -229,8 +259,14 @@ namespace SmartTank {
 			bodyGravAccel = SmartTank.gravAccel(body);
 		}
 
+		/// <summary>
+		/// The acceleration due to gravity at the surface of BodyForTWR.
+		/// </summary>
 		public double bodyGravAccel = 0;
 
+		/// <summary>
+		/// Field to toggle whether the target TWR should be vacuum or in-atmosphere.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_AtmosphericPrompt",
 			isPersistant    = true,
@@ -241,6 +277,9 @@ namespace SmartTank {
 		)]
 		public bool Atmospheric = Settings.Instance.Atmospheric;
 
+		/// <summary>
+		/// Thrust-to-weight ratio to aim for in this stage.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_TargetTWRPrompt",
 			isPersistant    = true,
@@ -258,6 +297,9 @@ namespace SmartTank {
 		)]
 		public float targetTWR = Settings.Instance.TargetTWR;
 
+		/// <summary>
+		/// Field to toggle whether size of tank should be set automatically.
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_AutoScalePrompt",
 			isPersistant    = true,
@@ -299,6 +341,9 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Called every UI tick.
+		/// </summary>
 		public void Update()
 		{
 			if (enabled && isEnabled && HighLogic.LoadedSceneIsEditor) {
@@ -370,6 +415,10 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Event to manually trigger the sizing.
+		/// Only used when auto-scaling is off.
+		/// </summary>
 		[KSPEvent(
 			guiName         = "smartTank_ScaleNowPrompt",
 			guiActive       = false,

@@ -7,10 +7,17 @@ using ProceduralParts;
 
 namespace SmartTank {
 
+	/// <summary>
+	/// Part module that automatically sets the size and diameters of a
+	/// procedural part based on its attached neighbor parts.
+	/// </summary>
 	public class DiameterMatcher : PartModule {
 
 		public DiameterMatcher() : base() { }
 
+		/// <summary>
+		/// Called when part is first created and during load of game assets
+		/// </summary>
 		public override void OnAwake()
 		{
 			base.OnAwake();
@@ -19,6 +26,10 @@ namespace SmartTank {
 			DiameterMatching = Settings.Instance.DiameterMatching;
 		}
 
+		/// <summary>
+		/// Called when part is created for use in editor or flight.
+		/// </summary>
+		/// <param name="state">Description of context where part will be used</param>
 		public override void OnStart(StartState state)
 		{
 			base.OnStart(state);
@@ -46,6 +57,9 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Field to toggle this module's functionality
+		/// </summary>
 		[KSPField(
 			guiName         = "smartTank_DiameterMatchingPrompt",
 			isPersistant    = true,
@@ -144,29 +158,23 @@ namespace SmartTank {
 					switch (oppoPP.shapeName) {
 						case "Cylinder":
 							return oppo.owner.GetModule<ProceduralShapeCylinder>().diameter;
-							break;
 						case "Curved": // Only used by the decoupler
 						case "Fillet Cylinder":
 							return oppo.owner.GetModule<ProceduralShapePill>().diameter;
-							break;
 						case "Cone":
 							switch (an.id) {
 								case "top":
 									return oppo.owner.GetModule<ProceduralShapeCone>().bottomDiameter;
-									break;
 								case "bottom":
 									return oppo.owner.GetModule<ProceduralShapeCone>().topDiameter;
-									break;
 							}
 							break;
 						case "Smooth Cone":
 							switch (an.id) {
 								case "top":
 									return oppo.owner.GetModule<ProceduralShapeCone>().bottomDiameter;
-									break;
 								case "bottom":
 									return oppo.owner.GetModule<ProceduralShapeCone>().topDiameter;
-									break;
 							}
 							break;
 					}
@@ -248,6 +256,9 @@ namespace SmartTank {
 			}
 		}
 
+		/// <summary>
+		/// Called on each UI tick
+		/// </summary>
 		public void Update()
 		{
 			if (enabled && isEnabled && HighLogic.LoadedSceneIsEditor) {

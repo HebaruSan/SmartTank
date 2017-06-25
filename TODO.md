@@ -2,7 +2,6 @@
 
 ## Release bookkeeping
 
-- [ ] XML documentation
 - [ ] Record / edit / upload demonstration video
 - [ ] Write README
 - [ ] Push to Github
