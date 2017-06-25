@@ -15,7 +15,7 @@
 
 1. Click fuel tank tab
 2. Place a procedural fuel tank
-3. Place a 1.25m decoupler on top of it
+3. Place a decoupler on top of it
 4. Place a mk1 pod on top of that
 5. Place a Terrier at the bottom
 6. Right click the tank
@@ -24,7 +24,7 @@
 
 ## Build sustainer stage
 
-1. Add a 1.25m decoupler at bottom
+1. Add a decoupler at bottom
 2. Add a procedural fuel tank at bottom
 3. Add a Mainsail at bottom
 

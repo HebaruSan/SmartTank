@@ -31,7 +31,6 @@ namespace SmartTank {
 				// Wait 1 second before initializing so ProceduralPart modules
 				// have a chance to re-init after a revert
 				StartCoroutine(after(1, () => {
-					print($"Enabling DiameterMatcher");
 					// Update won't get called without this
 					isEnabled = enabled = HighLogic.LoadedSceneIsEditor;
 				}));
