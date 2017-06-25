@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiameterMatcher.cs" />
     <Compile Include="SmartTank.cs" />
     <Compile Include="SmartTankPart.cs" />
     <Compile Include="AppLauncher.cs" />

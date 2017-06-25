@@ -29,5 +29,4 @@
 - [ ] Solid fuel
 - [ ] Xenon / Electric Charge
 - [ ] Monopropellant
-- [ ] Decouplers
 - [ ] Fueled nosecones
