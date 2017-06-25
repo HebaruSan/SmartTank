@@ -16,10 +16,6 @@
 - [ ] Attached parts rendered with offset from joint in some symmetry configurations
 - [ ] Update texture in parts list when default changes
 
-## Calculation
-
-- [ ] Get precise diameters if next to other procedural parts
-
 ## Auto size more procedural parts
 
 - [ ] Solid fuel
