@@ -76,21 +76,52 @@ namespace SmartTank {
 		)]
 		public bool FuelMatching = Settings.Instance.FuelMatching;
 
-		// TODO - get this on the fly from the ConfigNodes
-		private const string LfOxTypeName = "Mixed";
+		ConfigNode[] tankTypeOptions;
+
+		private ConfigNode getContentSwitcher()
+		{
+			return part?.partInfo?.partConfig?.GetNode("MODULE", "name", "TankContentSwitcher");
+		}
 
 		private string EngineTankType(Part enginePart)
 		{
 			if (enginePart != null && enginePart.HasModule<ModuleEngines>()) {
-				List<PartResourceDefinition> resources = enginePart.GetModule<ModuleEngines>().GetConsumedResources();
-				if (resources.Count == 1) {
-					return resources[0].name;
-				} else {
-					return LfOxTypeName;
+				if (tankTypeOptions == null || tankTypeOptions.Length < 1) {
+					tankTypeOptions = getContentSwitcher().GetNodes("TANK_TYPE_OPTION");
 				}
-			} else {
-				return LfOxTypeName;
+
+				List<PartResourceDefinition> engResources = enginePart.GetModule<ModuleEngines>().GetConsumedResources();
+				TankContentSwitcher.TankTypeOption tto = new TankContentSwitcher.TankTypeOption();
+				for (int tType = 0; tType < tankTypeOptions.Length; ++tType) {
+					tto.Load(tankTypeOptions[tType]);
+					// If the tank doesn't have the same number of resources as the engine, we can't use it.
+					if (engResources.Count == tto.resources.Count) {
+						bool hasAll = true;
+						for (int er = 0; er < engResources.Count; ++er) {
+							// If the tank type doesn't have this resource, we can't use it.
+							bool found = false;
+							for (int tr = 0; tr < tto.resources.Count; ++tr) {
+								if (engResources[er].name == tto.resources[tr].name) {
+									// Found the engine resource in the tank. No need to look at the tank's other resources.
+									found = true;
+									break;
+								}
+							}
+							if (!found) {
+								// Failed to find an engine resource in the tank. Next tank.
+								hasAll = false;
+								break;
+							}
+						}
+						// If the tank type has all the right resources, use it.
+						if (hasAll) {
+							return tto.name;
+						}
+					}
+				}
 			}
+			// If all else fails, leave the tank as is.
+			return "";
 		}
 
 		private Part findEngine()
@@ -107,12 +138,14 @@ namespace SmartTank {
 		private void MatchFuel()
 		{
 			if (part.HasModule<TankContentSwitcher>()) {
-				TankContentSwitcher tcs = part.GetModule<TankContentSwitcher>();
-
-				string tankType = EngineTankType(findEngine());
-				if (tcs.tankType != tankType) {
-					tcs.tankType = tankType;
-					getFuelInfo(tankType);
+				Part eng = findEngine();
+				if (eng != null) {
+					TankContentSwitcher tcs = part.GetModule<TankContentSwitcher>();
+					string tankType = EngineTankType(eng);
+					if (tankType != "" && tcs.tankType != tankType) {
+						tcs.tankType = tankType;
+						getFuelInfo(tankType);
+					}
 				}
 			}
 		}
@@ -322,11 +355,6 @@ namespace SmartTank {
 		}
 
 		private double wetDensity;
-
-		private ConfigNode getContentSwitcher()
-		{
-			return part?.partInfo?.partConfig?.GetNode("MODULE", "name", "TankContentSwitcher");
-		}
 
 		private ConfigNode getFuelNode(string optionName)
 		{
