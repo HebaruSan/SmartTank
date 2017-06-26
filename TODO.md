@@ -3,7 +3,6 @@
 ## Release bookkeeping
 
 - [ ] Record / edit / upload demonstration video
-- [ ] Write README
 - [ ] Push to Github
 - [ ] Add to CKAN
 
