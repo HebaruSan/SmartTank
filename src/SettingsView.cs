@@ -178,7 +178,7 @@ namespace SmartTank {
 		private const           float      boxWidth        = leftColWidth + rightColWidth;
 		private const           float      boxHeight       = 5 * textFieldHeight;
 		private const           float      boxSpacing      = 2;
-		private const           int        bigPadding         = 10;
+		private const           int        bigPadding      = 10;
 		private static readonly RectOffset boxPadding      = new RectOffset(bigPadding, bigPadding, bigPadding, bigPadding);
 		private static readonly RectOffset winPadding      = new RectOffset(2, 2, 2, 2);
 		private static readonly RectOffset noPadding       = new RectOffset(0, 0, 0, 0);
@@ -237,6 +237,8 @@ namespace SmartTank {
 
 		private PopupDialog dialog;
 
+		private static Version modVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
 		/// <summary>
 		/// Create a MultiOptionDialog containing this view
 		/// and display it on the screen.
@@ -250,7 +252,11 @@ namespace SmartTank {
 				new MultiOptionDialog(
 					SmartTank.Name,
 					"smartTank_SettingsSubtitle",
-					Localizer.Format("smartTank_SettingsTitle", SmartTank.Name),
+					Localizer.Format(
+						"smartTank_SettingsTitle",
+						SmartTank.Name,
+						modVersion.Major, modVersion.Minor, modVersion.Build
+					),
 					UISkinManager.defaultSkin,
 					windowWidth,
 					this

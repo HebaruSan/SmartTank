@@ -67,6 +67,20 @@ namespace SmartTank {
 		}
 
 		/// <summary>
+		/// Return the total wet mass of a part
+		/// The mass property is just the dry mass, so
+		/// to get the wet mass, we need to add the resource mass.
+		/// </summary>
+		/// <param name="p">Part to examine</param>
+		/// <returns>
+		/// Total wet mass of the part
+		/// </returns>
+		private double partTotalMass(Part p)
+		{
+			return p.mass + p.GetResourceMass();
+		}
+
+		/// <summary>
 		/// Fires when the simulator is updated
 		/// </summary>
 		private void OnSimUpdate()
@@ -81,43 +95,56 @@ namespace SmartTank {
 
 				if (stage != null && numTanks > 0) {
 					if (stage.thrust <= 0) {
+						// No thrust on this stage, so fuel doesn't make sense either.
+						// Note that IdealTotalMass effectively is optional for the parts
+						// to obey; if AutoScale is false, they can ignore it.
 						for (int t = 0; t < numTanks; ++t) {
 							// Reset all the tanks to minimum size with no thrust
-							stage.drainedTanks[t].IdealWetMass = 0;
+							stage.drainedTanks[t].nodesError     = nodesErr;
+							stage.drainedTanks[t].IdealTotalMass = 0;
+							if (stage.drainedTanks[0].AutoScale) {
+								totalMassChange -= partTotalMass(stage.drainedTanks[t].part);
+							}
 						}
+
 					} else {
-						// Calculate the amount of fuel to distribute among this stage's procedural tanks
-						double dryMass = stage.totalMass - stage.resourceMass + totalMassChange;
-						double thrust  = stage.drainedTanks[0].Atmospheric ? stage.thrust : stage.vacuumThrust;
-						double targetFuelMass = optimalFuelMass(
+						// This stage has thrust that we can balance against the fuel.
+
+						// Add up the current procedural tank mass
+						double currentProcTankMass = 0;
+						for (int t = 0; t < numTanks; ++t) {
+							currentProcTankMass += partTotalMass(stage.drainedTanks[t].part);
+						}
+
+						// Determine the mass that the procedural parts can't change
+						double nonProcMass = stage.totalMass - currentProcTankMass + totalMassChange;
+						// Get the thrust this stage is configured to use
+						double thrust      = stage.drainedTanks[0].Atmospheric ? stage.thrust : stage.vacuumThrust;
+						// Calculate the mass to distribute among this stage's procedural tanks
+						// This includes their wet AND dry mass!
+						double targetProcTankMass = optimalTankMass(
 							thrust,
 							stage.drainedTanks[0].bodyGravAccel,
 							stage.drainedTanks[0].targetTWR,
-							dryMass
+							nonProcMass
 						);
 
 						// Assume we'll have our way if auto scaling,
 						// otherwise use the existing mass
-						double massChange = targetFuelMass > 0 ? targetFuelMass - stage.resourceMass : 0;
 						if (stage.drainedTanks[0].AutoScale) {
+							double massChange = targetProcTankMass > 0
+								? targetProcTankMass - currentProcTankMass
+								: 0;
 							totalMassChange += massChange;
 						}
 
-						// Add up the current procedural fuel mass
-						double massSum = 0;
-						for (int t = 0; t < numTanks; ++t) {
-							massSum += stage.drainedTanks[t].part.GetResourceMass();
-						}
-						// Subtract off the fuel that's in non-procedural tanks
-						double nonProceduralFuelMass = Math.Max(
-							0,
-							stage.resourceMass - massSum
-						);
-						targetFuelMass -= nonProceduralFuelMass;
 						// Distribute the mass in the same proportions as it is now
-						for (int t = 0; t < numTanks; ++t) {
-							stage.drainedTanks[t].nodesError = nodesErr;
-							stage.drainedTanks[t].IdealWetMass = targetFuelMass * stage.drainedTanks[t].part.GetResourceMass() / massSum;
+						double perTankRatio = targetProcTankMass / currentProcTankMass;
+						if (Math.Abs(perTankRatio - 1) > 0.05) {
+							for (int t = 0; t < numTanks; ++t) {
+								stage.drainedTanks[t].nodesError     = nodesErr;
+								stage.drainedTanks[t].IdealTotalMass = perTankRatio * partTotalMass(stage.drainedTanks[t].part);
+							}
 						}
 					}
 				}
@@ -149,7 +176,7 @@ namespace SmartTank {
 		/// <returns>
 		/// Mass in metric tons of fuel that should be used
 		/// </returns>
-		private static double optimalFuelMass(double thrust, double gravAccel, double desiredTWR, double dryMass)
+		private static double optimalTankMass(double thrust, double gravAccel, double desiredTWR, double dryMass)
 		{
 			if (desiredTWR > 0 && gravAccel > 0 && dryMass > 0) {
 				return Math.Max(

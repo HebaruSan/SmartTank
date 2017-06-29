@@ -30,15 +30,17 @@ namespace SmartTank {
 			ConfigNode.CreateConfigFromObject(this, new ConfigNode(GetType().Name)).Save(path);
 		}
 
+		private const  string   settingsSuffix   = "settings";
+		private static string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
+		private const  string   fuelResourceName = "LiquidFuel";
+
 		/// <summary>
 		/// The singleton instance of this class.
 		/// Should be the only way other code accesses it.
+		/// Make sure this is after all other static members, so
+		/// the constructor can use them!
 		/// </summary>
-		public  static readonly Settings Instance         = new Settings();
-
-		private const           string   settingsSuffix   = "settings";
-		private static readonly string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
-		private const           string   fuelResourceName = "LiquidFuel";
+		public  static Settings Instance         = new Settings();
 
 		/// <summary>
 		/// Call after changing HideNonProceduralParts.

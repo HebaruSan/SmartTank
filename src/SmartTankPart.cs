@@ -199,7 +199,7 @@ namespace SmartTank {
 			guiActive       = false,
 			guiActiveEditor = false
 		)]
-		public double IdealWetMass;
+		public double IdealTotalMass;
 
 		/// <summary>
 		/// Field for the body to use for TWR calculation.
@@ -429,7 +429,7 @@ namespace SmartTank {
 		{
 			if (HighLogic.LoadedSceneIsEditor && wetDensity > 0) {
 				// Volume of fuel to use:
-				double idealVolume = IdealWetMass / wetDensity;
+				double idealVolume = IdealTotalMass / wetDensity;
 
 				if (part.HasModule<ProceduralShapeCylinder>()) {
 					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
