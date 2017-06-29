@@ -118,8 +118,12 @@ namespace SmartTank {
 
 						// Determine the mass that the procedural parts can't change
 						double nonProcMass = stage.totalMass - currentProcTankMass + totalMassChange;
+
 						// Get the thrust this stage is configured to use
-						double thrust      = stage.drainedTanks[0].Atmospheric ? stage.thrust : stage.vacuumThrust;
+						double thrust = stage.drainedTanks[0].Atmospheric
+							? stage.thrust
+							: stage.vacuumThrust;
+
 						// Calculate the mass to distribute among this stage's procedural tanks
 						// This includes their wet AND dry mass!
 						double targetProcTankMass = optimalTankMass(
@@ -140,7 +144,7 @@ namespace SmartTank {
 
 						// Distribute the mass in the same proportions as it is now
 						double perTankRatio = targetProcTankMass / currentProcTankMass;
-						if (Math.Abs(perTankRatio - 1) > 0.05) {
+						if (Math.Abs(perTankRatio - 1) > 0.01) {
 							for (int t = 0; t < numTanks; ++t) {
 								stage.drainedTanks[t].nodesError     = nodesErr;
 								stage.drainedTanks[t].IdealTotalMass = perTankRatio * partTotalMass(stage.drainedTanks[t].part);

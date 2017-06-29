@@ -10,7 +10,6 @@ namespace SmartTank {
 	/// <summary>
 	/// Part module to:
 	///   - Auto set length based on TWR
-	///   - Set default texture
 	///   - Set fuel type based on attached engine resource consumption
 	/// </summary>
 	public class SmartTankPart : PartModule {
@@ -25,14 +24,11 @@ namespace SmartTank {
 			base.OnAwake();
 
 			// Reset to defaults for each new part
-			FuelMatching     = Settings.Instance.FuelMatching;
-			BodyForTWR       = Settings.Instance.BodyForTWR;
-			Atmospheric      = Settings.Instance.Atmospheric;
-			targetTWR        = Settings.Instance.TargetTWR;
-			AutoScale        = Settings.Instance.AutoScale;
-
-			// Set the texture for the preview part in the parts list and newly placed parts
-			SetTexture();
+			FuelMatching = Settings.Instance.FuelMatching;
+			BodyForTWR   = Settings.Instance.BodyForTWR;
+			Atmospheric  = Settings.Instance.Atmospheric;
+			targetTWR    = Settings.Instance.TargetTWR;
+			AutoScale    = Settings.Instance.AutoScale;
 		}
 
 		/// <summary>
@@ -66,16 +62,6 @@ namespace SmartTank {
 				yield return new WaitForSeconds(seconds);
 				cb();
 				yield break;
-			}
-		}
-
-		private void SetTexture()
-		{
-			if (part != null && part.HasModule<ProceduralPart>()) {
-				ProceduralPart pp = part.GetModule<ProceduralPart>();
-				if (pp != null) {
-					pp.textureSet = Settings.Instance.DefaultTexture;
-				}
 			}
 		}
 

@@ -22,3 +22,8 @@
 - [ ] Xenon / Electric Charge
 - [ ] Monopropellant
 - [ ] Fueled nosecones
+
+## More sophisticated logic
+
+- [ ] Determine atmospheric programmatically based on engine
+- [ ] Multiple texture defaults based on dimensions (small, medium, large)

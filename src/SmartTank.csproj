@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiameterMatcher.cs" />
+    <Compile Include="TextureDefaulter.cs" />
     <Compile Include="SmartTank.cs" />
     <Compile Include="SmartTankPart.cs" />
     <Compile Include="AppLauncher.cs" />

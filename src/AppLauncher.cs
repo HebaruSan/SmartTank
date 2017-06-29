@@ -18,8 +18,8 @@ namespace SmartTank {
 			ApplicationLauncher.AppScenes.SPH;
 		private static readonly string    AppIconPath  = $"{SmartTank.Name}/{SmartTank.Name}";
 		private static readonly Texture2D AppIcon      = GameDatabase.Instance.GetTexture(AppIconPath, false);
-		private static readonly string    tooltipTitle = Localizer.Format("smartTank_SettingsTitle", SmartTank.Name);
-		private static readonly string    tooltipText  = "smartTank_SettingsTooltip";
+		private static readonly string    tooltipTitle = Localizer.Format("smartTank_SettingsTooltipTitle", SmartTank.Name);
+		private static readonly string    tooltipText  = "smartTank_SettingsTooltipText";
 
 		private ApplicationLauncherButton launcher;
 

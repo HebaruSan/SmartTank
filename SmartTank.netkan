@@ -18,5 +18,12 @@
     "depends": [
         { "name": "ModuleManager" },
         { "name": "ProceduralParts" }
+    ],
+    "recommends": [
+        { "name": "ProceduralParts-Textures-BattleTechAerospace" },
+        { "name": "ProceduralParts-Textures-SCCKSCS" },
+        { "name": "ProceduralParts-Textures-SaturnNova" },
+        { "name": "VensStylePPTextures" },
+        { "name": "MainSailorTextures-Complete" }
     ]
 }
