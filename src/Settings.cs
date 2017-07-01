@@ -30,9 +30,9 @@ namespace SmartTank {
 			ConfigNode.CreateConfigFromObject(this, new ConfigNode(GetType().Name)).Save(path);
 		}
 
-		private const  string   settingsSuffix   = "settings";
-		private static string   path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
-		private const  string   fuelResourceName = "LiquidFuel";
+		private const  string settingsSuffix   = "settings";
+		private static string path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{SmartTank.Name}.{settingsSuffix}";
+		private const  string fuelResourceName = "LiquidFuel";
 
 		/// <summary>
 		/// The singleton instance of this class.
