@@ -25,7 +25,7 @@ This mod will do nothing unless you install **all** of the dependencies!
 
 [Procedural Parts repository]: https://github.com/Starwaster/ProceduralParts
 
-[Procedural Parts forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/162105-130-procedural-parts-starwaster-branch/)
+[Procedural Parts forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/162105-130-procedural-parts-starwaster-branch/
 
 Kerbal Engineer Redux is **not** required. We use our own modified version of KER's vessel simulator, embedded in the main DLL.
 
