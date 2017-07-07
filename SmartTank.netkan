@@ -20,6 +20,7 @@
         { "name": "ProceduralParts" }
     ],
     "recommends": [
+        { "name": "LoadingTipsPlus" },
         { "name": "ProceduralParts-Textures-BattleTechAerospace" },
         { "name": "ProceduralParts-Textures-SCCKSCS" },
         { "name": "ProceduralParts-Textures-SaturnNova" },

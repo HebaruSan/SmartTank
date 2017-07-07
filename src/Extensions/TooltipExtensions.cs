@@ -8,7 +8,7 @@ namespace SmartTank {
 	/// </summary>
 	public static class TooltipExtensions {
 
-		private static Tooltip_TitleAndText titleAndTextTooltipPrefab = AssetBase.GetPrefab<Tooltip_TitleAndText>("Tooltip_TitleAndText");
+		private static readonly Tooltip_TitleAndText titleAndTextTooltipPrefab = AssetBase.GetPrefab<Tooltip_TitleAndText>("Tooltip_TitleAndText");
 
 		/// <summary>
 		/// Create a tooltip object for a given GameObject, containing both
@@ -29,7 +29,7 @@ namespace SmartTank {
 			}
 		}
 
-		private static Tooltip_Text textTooltipPrefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+		private static readonly Tooltip_Text textTooltipPrefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
 
 		/// <summary>
 		/// Create a tooltip object for a given GameObject, containing just one simple string.

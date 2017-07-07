@@ -1,0 +1,7 @@
+LOADINGTOOLTIPSPLUS
+{
+	Overwrite = false
+	ToolTip  = smartTank_loadingTip1
+	ToolTip2 = smartTank_loadingTip2
+	ToolTip3 = smartTank_loadingTip3
+}
