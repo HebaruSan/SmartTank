@@ -37,6 +37,12 @@ The [latest release] is available on Github.
 
 Unzip to your GameData folder.
 
+## Discussion
+
+Join us at the [forum thread].
+
+[forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/162743-130-smarttank/
+
 ## Localization
 
 See the [lang folder].
