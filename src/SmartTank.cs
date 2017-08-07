@@ -44,19 +44,29 @@ namespace SmartTank {
 			}
 		}
 
+		private bool needSimulation = false;
+
 		private void OnShipModified(ShipConstruct sc)
 		{
-			RunSimulator();
+			needSimulation = true;
 		}
 
 		private void OnPartPlaced(Part p)
 		{
-			RunSimulator();
+			needSimulation = true;
 		}
 
 		private void OnStagingChanged()
 		{
-			RunSimulator();
+			needSimulation = true;
+		}
+
+		private void Update()
+		{
+			if (needSimulation) {
+				RunSimulator();
+				needSimulation = false;
+			}
 		}
 
 		private void RunSimulator()
