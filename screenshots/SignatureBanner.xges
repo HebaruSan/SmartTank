@@ -1,0 +1,29 @@
+<ges version='0.2'>
+  <project properties='properties;' metadatas='metadatas, name=(string)&quot;SmartTank\ signature\ banner&quot;, author=(string)&quot;&quot;, render-scale=(double)100, year=(string)2017, format-version=(string)0.2;'>
+    <encoding-profiles>
+      <encoding-profile name='pitivi-profile' description='Pitivi encoding profile' type='container' preset-name='mp4mux' format='video/quicktime, variant=(string)iso' >
+        <stream-profile parent='pitivi-profile' id='0' type='video' presence='1' format='video/x-h264, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], stream-format=(string){ avc, byte-stream }, alignment=(string)au, profile=(string){ high-4:4:4, high-4:2:2, high-10, high, main, baseline, constrained-baseline, high-4:4:4-intra, high-4:2:2-intra, high-10-intra }' preset-name='x264enc' restriction='video/x-raw, width=(int)320, height=(int)80, framerate=(fraction)30/1, pixel-aspect-ratio=(fraction)1/1, format=(string)I420' pass='0' variableframerate='0' />
+        <stream-profile parent='pitivi-profile' id='1' type='audio' presence='1' enabled='0' format='audio/mpeg, mpegversion=(int)4, rate=(int){ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 96000 }, channels=(int)[ 1, 2 ], stream-format=(string){ adts, raw }, base-profile=(string)lc' preset-name='voaacenc' restriction='audio/x-raw, channels=(int)2, rate=(int)44100' />
+      </encoding-profile>
+    </encoding-profiles>
+    <ressources>
+      <asset id='file:///media/DataTrove/Movies/Youtube-20170815_182122.mp4' extractable-type-name='GESUriClip' properties='properties, supported-formats=(int)6, duration=(guint64)22500000000;' metadatas='metadatas, video-codec=(string)&quot;H.264\ /\ AVC&quot;, bitrate=(uint)445135, encoder=(string)Lavf57.56.101, container-format=(string)&quot;ISO\ MP4/M4A&quot;, audio-codec=(string)&quot;MPEG-1\ audio&quot;, maximum-bitrate=(uint)85708, has-crc=(boolean)false, channel-mode=(string)joint-stereo, nominal-bitrate=(uint)192000;' />
+    </ressources>
+    <timeline properties='properties, auto-transition=(boolean)true, snapping-distance=(guint64)606207565;' metadatas='metadatas, duration=(guint64)2219794153;'>
+      <track caps='video/x-raw(ANY)' track-type='4' track-id='0' properties='properties, async-handling=(boolean)false, message-forward=(boolean)true, caps=(string)&quot;video/x-raw\(ANY\)&quot;, restriction-caps=(string)&quot;video/x-raw\,\ width\=\(int\)320\,\ height\=\(int\)80\,\ framerate\=\(fraction\)30/1&quot;, mixing=(boolean)true;' metadatas='metadatas;'/>
+      <track caps='audio/x-raw(ANY)' track-type='2' track-id='1' properties='properties, async-handling=(boolean)false, message-forward=(boolean)true, caps=(string)&quot;audio/x-raw\(ANY\)&quot;, restriction-caps=(string)&quot;audio/x-raw\,\ format\=\(string\)S32LE\,\ channels\=\(int\)2\,\ rate\=\(int\)44100\,\ layout\=\(string\)interleaved&quot;, mixing=(boolean)true;' metadatas='metadatas;'/>
+      <layer priority='0' properties='properties, auto-transition=(boolean)true;' metadatas='metadatas, volume=(float)1;'>
+        <clip id='0' asset-id='file:///media/DataTrove/Movies/Youtube-20170815_182122.mp4' type-name='GESUriClip' layer-priority='0' track-types='6' start='0' duration='2219794153' inpoint='12598095069' rate='0' properties='properties, name=(string)uriclip1, mute=(boolean)false, is-image=(boolean)false;' >
+          <source track-id='1' children-properties='properties, GstVolume::mute=(boolean)false, GstVolume::volume=(double)1;'>
+            <binding type='direct' source_type='interpolation' property='volume' mode='1' track_id='1' values =' 12598095069:0.10000000149011612  14817889222:0.10000000149011612 '/>
+          </source>
+          <source track-id='0' children-properties='properties, GstFramePositioner::alpha=(double)1, GstDeinterlace::fields=(int)0, GstFramePositioner::height=(int)609, GstDeinterlace::mode=(int)0, GstFramePositioner::posx=(int)-423, GstFramePositioner::posy=(int)-208, GstDeinterlace::tff=(int)0, GstFramePositioner::width=(int)1079;'>
+            <binding type='direct' source_type='interpolation' property='alpha' mode='1' track_id='0' values =' 12598095069:1  14817889222:1 '/>
+          </source>
+        </clip>
+      </layer>
+      <groups>
+      </groups>
+    </timeline>
+</project>
+</ges>

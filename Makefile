@@ -1,5 +1,7 @@
 .PHONY: all clean
 
+PROJECT=SmartTank
+
 SOURCEDIR=src
 SOURCE=$(wildcard $(SOURCEDIR)/*.cs) $(wildcard $(SOURCEDIR)/*/*.cs) $(wildcard $(SOURCEDIR)/*.csproj)
 ASSETDIR=assets
@@ -11,14 +13,14 @@ GAMELINK=$(SOURCEDIR)/KSP_x64_Data
 PROCPARTSLINK=$(SOURCEDIR)/ProceduralParts
 DEFAULTGAMEDIR=$(HOME)/.local/share/Steam/SteamApps/common/Kerbal Space Program
 
-DEBUGDLL=$(SOURCEDIR)/bin/Debug/SmartTank.dll
-RELEASEDLL=$(SOURCEDIR)/bin/Release/SmartTank.dll
-DISTDIR=SmartTank
-RELEASEZIP=SmartTank.zip
-DLLDOCS=$(SOURCEDIR)/bin/Release/SmartTank.xml
+DEBUGDLL=$(SOURCEDIR)/bin/Debug/$(PROJECT).dll
+RELEASEDLL=$(SOURCEDIR)/bin/Release/$(PROJECT).dll
+DISTDIR=$(PROJECT)
+RELEASEZIP=$(PROJECT).zip
+DLLDOCS=$(SOURCEDIR)/bin/Release/$(PROJECT).xml
 DLLSYMBOLS=$(DEBUGDLL).mdb
 LICENSE=LICENSE
-VERSION=SmartTank.version
+VERSION=$(PROJECT).version
 TAGS=tags
 
 TARGETS=$(DEBUGDLL) $(RELEASEDLL) $(RELEASEZIP)
@@ -41,7 +43,7 @@ $(RELEASEDLL): $(SOURCE) $(GAMELINK) $(PROCPARTSLINK)
 $(RELEASEZIP): $(DEBUGDLL) $(ICONS) $(README) $(DLLDOCS) $(DLLSYMBOLS) $(LICENSE) $(VERSION) $(CONFIGS) $(LANGUAGES)
 	mkdir -p $(DISTDIR)
 	cp -a $^ $(DISTDIR)
-	zip -r $@ $(DISTDIR) -x \*.settings
+	zip -qr $@ $(DISTDIR) -x \*.settings
 
 $(PROCPARTSLINK):
 	if [ ! -x "$(DEFAULTGAMEDIR)" ]; \
