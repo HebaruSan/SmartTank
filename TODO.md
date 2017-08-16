@@ -1,9 +1,5 @@
 # TODO
 
-## Release bookkeeping
-
-- [ ] Forum signature banner
-
 ## Fixes
 
 - [ ] Freeze on re-root
