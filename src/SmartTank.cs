@@ -35,12 +35,41 @@ namespace SmartTank {
 		public void Start()
 		{
 			if (ProceduralPartsInstalled) {
+				GameEvents.onEditorShipModified.Add(OnShipModified);
+				GameEvents.onEditorPartPlaced.Add(OnPartPlaced);
+				GameEvents.StageManager.OnGUIStageSequenceModified.Add(OnStagingChanged);
+
 				SimManager.OnReady += OnSimUpdate;
 				Settings.Instance.HideNonProceduralPartsChanged();
 			}
 		}
 
+		private bool needSimulation = false;
+
+		private void OnShipModified(ShipConstruct sc)
+		{
+			needSimulation = true;
+		}
+
+		private void OnPartPlaced(Part p)
+		{
+			needSimulation = true;
+		}
+
+		private void OnStagingChanged()
+		{
+			needSimulation = true;
+		}
+
 		private void Update()
+		{
+			if (needSimulation) {
+				RunSimulator();
+				needSimulation = false;
+			}
+		}
+
+		private void RunSimulator()
 		{
 			if (ProceduralPartsInstalled) {
 				try {
@@ -62,6 +91,10 @@ namespace SmartTank {
 		public void OnDisable()
 		{
 			if (ProceduralPartsInstalled) {
+				GameEvents.onEditorShipModified.Remove(OnShipModified);
+				GameEvents.onEditorPartPlaced.Remove(OnPartPlaced);
+				GameEvents.StageManager.OnGUIStageSequenceModified.Remove(OnStagingChanged);
+
 				SimManager.OnReady -= OnSimUpdate;
 			}
 		}

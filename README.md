@@ -61,6 +61,12 @@ See [TODO.md](TODO.md).
 
 ## Credits and acknowledgements
 
+Special thanks to all those who have helped to translate SmartTank to other languages!
+
+| Language | Translators |
+| ---      | ---         |
+| Spanish  | [Fitiales](https://github.com/Fitiales) |
+
 - Icon from http://fontawesome.io/icon/rocket/ http://fontawesome.io/icon/arrows-v/ http://fontawesome.io/icon/arrows-h/
 - Includes vessel simulator from [Kerbal Engineer Redux][Kerbal Engineer repository] ([forum thread][Kerbal Engineer forum thread])
 
