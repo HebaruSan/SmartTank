@@ -20,6 +20,14 @@ namespace SmartTank {
 			if (File.Exists(path)) {
 				ConfigNode.LoadObjectFromConfig(this, ConfigNode.Load(path));
 			}
+			if (string.IsNullOrEmpty(BodyForTWR)) {
+				// Planet pack compatible method for finding name of home planet
+				GameEvents.onLevelWasLoadedGUIReady.Add((GameScenes s) => {
+					if (string.IsNullOrEmpty(BodyForTWR)) {
+						BodyForTWR = Planetarium.fetch.Home.name;
+					}
+				});
+			}
 		}
 
 		/// <summary>
@@ -119,7 +127,7 @@ namespace SmartTank {
 		/// <summary>
 		/// Name of body to use for calculating TWR.
 		/// </summary>
-		[Persistent] public string BodyForTWR                 = Planetarium?.fetch?.Home?.name ?? "Kerbin";
+		[Persistent] public string BodyForTWR                 = string.Empty;
 
 		/// <summary>
 		/// Default thrust-to-weight ratio to use when calculating desired
