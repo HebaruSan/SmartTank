@@ -18,7 +18,11 @@ namespace SmartTank {
 		private Settings()
 		{
 			if (File.Exists(path)) {
-				ConfigNode.LoadObjectFromConfig(this, ConfigNode.Load(path));
+				try {
+					ConfigNode.LoadObjectFromConfig(this, ConfigNode.Load(path));
+				} catch (Exception ex) {
+					print($"Failed to load settings file: {ex.Message}\n{ex.StackTrace}");
+				}
 			}
 			if (string.IsNullOrEmpty(BodyForTWR)) {
 				// Planet pack compatible method for finding name of home planet
