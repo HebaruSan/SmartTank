@@ -123,7 +123,7 @@ namespace SmartTank {
 			double totalMassChange = 0;
 
 			for (int st = 0; st < SimManager.Stages.Length; ++st) {
-				Stage stage = SimManager?.Stages[st] ?? null;
+				Stage stage = SimManager.Stages[st] ?? null;
 				int numTanks = stage.drainedTanks.Count;
 
 				if (stage != null && numTanks > 0) {

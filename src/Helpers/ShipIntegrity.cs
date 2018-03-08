@@ -60,7 +60,7 @@ namespace SmartTank {
 		private static string attachNodeStructureError()
 		{
 			try {
-				List<Part> parts = EditorLogic?.fetch?.ship?.parts;
+				List<Part> parts = EditorLogic.fetch?.ship?.parts;
 				if (parts == null) {
 					return "No parts found";
 				} else if (parts.Count < 2) {

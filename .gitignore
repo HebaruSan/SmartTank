@@ -163,11 +163,8 @@ $RECYCLE.BIN/
 SmartTank/*
 
 # Our special symlink to the game DLLs
-src/KSP_x64_Data
+src/KSP_Data
 src/ProceduralParts
-
-# Generated CKAN files (the .netkan file is the one we need)
-*.ckan
 
 # Index of names in source code
 tags

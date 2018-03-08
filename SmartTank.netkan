@@ -1,30 +1,5 @@
 {
     "spec_version": 1,
-    "identifier": "SmartTank",
-    "name": "SmartTank",
-    "abstract": "Automatically resizes ProceduralParts fuel tanks to fit a specified thrust to weight ratio",
-    "description": "Uses an embedded copy of Kerbal Engineer's vessel simulator to determine the TWR of each stage, then adjusts the sizes of tanks from Procedural Parts to fit a user-specified TWR. Also sets top and bottom diameters to match attached parts, matches the fuel tank type to the attached engine, and allows the user to change the default texture. All such features can be toggled at the part level with tweakables or at the system level via a button in the stock toolbar.",
-    "comment": "Indexed by author. Please report any problems at the repository bugtracker.",
-    "$kref": "#/ckan/github/HebaruSan/SmartTank",
-    "$vref": "#/ckan/ksp-avc",
-    "license": "GPL-3.0",
-    "kind": "package",
-    "release_status": "development",
-    "resources": {
-        "homepage": "http://forum.kerbalspaceprogram.com/index.php?/topic/162743-130-smarttank/",
-        "bugtracker": "https://github.com/HebaruSan/SmartTank/issues",
-        "repository": "https://github.com/HebaruSan/SmartTank"
-    },
-    "depends": [
-        { "name": "ModuleManager" },
-        { "name": "ProceduralParts" }
-    ],
-    "recommends": [
-        { "name": "LoadingTipsPlus" },
-        { "name": "ProceduralParts-Textures-BattleTechAerospace" },
-        { "name": "ProceduralParts-Textures-SCCKSCS" },
-        { "name": "ProceduralParts-Textures-SaturnNova" },
-        { "name": "VensStylePPTextures" },
-        { "name": "MainSailorTextures-Complete" }
-    ]
+    "identifier":   "SmartTank",
+    "$kref":        "#/ckan/github/HebaruSan/SmartTank"
 }

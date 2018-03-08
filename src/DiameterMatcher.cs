@@ -200,7 +200,7 @@ namespace SmartTank {
 					}
 				}
 
-				List<Part> parts = EditorLogic?.fetch?.ship?.parts;
+				List<Part> parts = EditorLogic.fetch?.ship?.parts;
 				if (parts != null) {
 					for (int p = 0; p < parts.Count; ++p) {
 						Part otherPart = parts[p];
