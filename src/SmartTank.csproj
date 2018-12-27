@@ -79,20 +79,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsView.cs" />
     <Compile Include="DialogGUIChooseOption.cs" />
-    <Compile Include="Simulation\AttachNodeSim.cs" />
-    <Compile Include="Simulation\EngineSim.cs" />
-    <Compile Include="Simulation\PartSim.cs" />
-    <Compile Include="Simulation\ResourceContainer.cs" />
-    <Compile Include="Simulation\SimManager.cs" />
-    <Compile Include="Simulation\Simulation.cs" />
-    <Compile Include="Simulation\Stage.cs" />
-    <Compile Include="Extensions\PartExtensions.cs" />
     <Compile Include="Extensions\TooltipExtensions.cs" />
-    <Compile Include="Helpers\Averager.cs" />
-    <Compile Include="Helpers\BasicLogger.cs" />
-    <Compile Include="Helpers\ForceAccumulator.cs" />
-    <Compile Include="Helpers\LogMsg.cs" />
-    <Compile Include="Helpers\Pool.cs" />
     <Compile Include="Helpers\ShipIntegrity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

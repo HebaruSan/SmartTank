@@ -71,7 +71,7 @@ namespace SmartTank {
 			List<AvailablePart> parts = PartLoader.LoadedPartsList;
 			for (int p = 0; p < parts.Count; ++p) {
 				Part pref = parts[p].partPrefab;
-				if (!pref.HasModule<ProceduralPart>()) {
+				if (!pref.Modules.Contains<ProceduralPart>()) {
 					// Fuel tanks, excluding engines and wings
 					// Note, the Mk2 spaceplane tanks are Propulsion instead of FuelTank
 					if (parts[p].category == fromCat) {
@@ -83,8 +83,8 @@ namespace SmartTank {
 						}
 					}
 					// Decouplers, excluding head shields and pylons
-					if (pref.HasModule<ModuleDecouple>()
-							&& !pref.HasModule<ModuleJettison>()) {
+					if (pref.Modules.Contains<ModuleDecouple>()
+							&& !pref.Modules.Contains<ModuleJettison>()) {
 						if (HideNonProceduralParts) {
 							if (parts[p].category == PartCategories.Coupling) {
 								parts[p].category = PartCategories.none;

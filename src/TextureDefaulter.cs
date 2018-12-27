@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KSP;
 using ProceduralParts;
 
 namespace SmartTank {
@@ -13,6 +14,9 @@ namespace SmartTank {
 	/// </summary>
 	public class TextureDefaulter : PartModule {
 
+		/// <summary>
+		/// Iniitalize a texture defaulter master
+		/// </summary>
 		public TextureDefaulter() : base() { }
 
 		/// <summary>
@@ -40,8 +44,8 @@ namespace SmartTank {
 
 		private void SetTexture()
 		{
-			if (part != null && part.HasModule<ProceduralPart>()) {
-				ProceduralPart pp = part.GetModule<ProceduralPart>();
+			if (part != null && part.Modules.Contains<ProceduralPart>()) {
+				ProceduralPart pp = part.Modules.GetModule<ProceduralPart>();
 				if (pp != null) {
 					pp.textureSet = Settings.Instance.DefaultTexture;
 				}

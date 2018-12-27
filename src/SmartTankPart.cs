@@ -14,6 +14,9 @@ namespace SmartTank {
 	/// </summary>
 	public class SmartTankPart : PartModule {
 
+		/// <summary>
+		/// Initialize a smart tank part module
+		/// </summary>
 		public SmartTankPart() : base() { }
 
 		/// <summary>
@@ -45,7 +48,7 @@ namespace SmartTank {
 				bodyChanged(null, null);
 				initializeAutoScale();
 				autoScaleChanged(null, null);
-				getFuelInfo(part.GetModule<TankContentSwitcher>().tankType);
+				getFuelInfo(part.Modules.GetModule<TankContentSwitcher>().tankType);
 
 				// Wait 1 second before initializing so ProceduralPart modules
 				// have a chance to re-init after a revert
@@ -87,12 +90,12 @@ namespace SmartTank {
 
 		private string EngineTankType(Part enginePart)
 		{
-			if (enginePart != null && enginePart.HasModule<ModuleEngines>()) {
+			if (enginePart != null && enginePart.Modules.Contains<ModuleEngines>()) {
 				if (tankTypeOptions == null || tankTypeOptions.Length < 1) {
 					tankTypeOptions = getContentSwitcher().GetNodes("TANK_TYPE_OPTION");
 				}
 
-				List<PartResourceDefinition> engResources = enginePart.GetModule<ModuleEngines>().GetConsumedResources();
+				List<PartResourceDefinition> engResources = enginePart.Modules.GetModule<ModuleEngines>().GetConsumedResources();
 				TankContentSwitcher.TankTypeOption tto = new TankContentSwitcher.TankTypeOption();
 				for (int tType = 0; tType < tankTypeOptions.Length; ++tType) {
 					tto.Load(tankTypeOptions[tType]);
@@ -130,7 +133,7 @@ namespace SmartTank {
 		{
 			for (int n = 0; n < part.attachNodes.Count; ++n) {
 				AttachNode an = part.attachNodes[n];
-				if (an?.attachedPart?.HasModule<ModuleEngines>() ?? false) {
+				if (an?.attachedPart?.Modules.Contains<ModuleEngines>() ?? false) {
 					return an.attachedPart;
 				}
 			}
@@ -139,10 +142,10 @@ namespace SmartTank {
 
 		private void MatchFuel()
 		{
-			if (part.HasModule<TankContentSwitcher>()) {
+			if (part.Modules.Contains<TankContentSwitcher>()) {
 				Part eng = findEngine();
 				if (eng != null) {
-					TankContentSwitcher tcs = part.GetModule<TankContentSwitcher>();
+					TankContentSwitcher tcs = part.Modules.GetModule<TankContentSwitcher>();
 					string tankType = EngineTankType(eng);
 					if (tankType != "" && tcs.tankType != tankType) {
 						tcs.tankType = tankType;
@@ -312,16 +315,16 @@ namespace SmartTank {
 
 		private bool lengthActive {
 			set {
-				if (part.HasModule<ProceduralShapeCylinder>()) {
-					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+				if (part.Modules.Contains<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
 					cyl.Fields["length"].guiActiveEditor = value;
 				}
-				if (part.HasModule<ProceduralShapePill>()) {
-					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+				if (part.Modules.Contains<ProceduralShapePill>()) {
+					ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
 					pil.Fields["length"].guiActiveEditor = value;
 				}
-				if (part.HasModule<ProceduralShapeCone>()) {
-					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				if (part.Modules.Contains<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
 					con.Fields["length"].guiActiveEditor = value;
 				}
 			}
@@ -336,8 +339,8 @@ namespace SmartTank {
 				if (FuelMatching) {
 					MatchFuel();
 				}
-				if (part.HasModule<TankContentSwitcher>()) {
-					part.GetModule<TankContentSwitcher>().Fields["tankType"].guiActiveEditor = !FuelMatching;
+				if (part.Modules.Contains<TankContentSwitcher>()) {
+					part.Modules.GetModule<TankContentSwitcher>().Fields["tankType"].guiActiveEditor = !FuelMatching;
 				}
 				if (AutoScale) {
 					ScaleNow();
@@ -417,8 +420,8 @@ namespace SmartTank {
 				// Volume of fuel to use:
 				double idealVolume = IdealTotalMass / wetDensity;
 
-				if (part.HasModule<ProceduralShapeCylinder>()) {
-					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+				if (part.Modules.Contains<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
 					double radius = 0.5 * cyl.diameter;
 					double crossSectionArea = Math.PI * radius * radius;
 					double idealLength = idealVolume / crossSectionArea;
@@ -427,15 +430,15 @@ namespace SmartTank {
 					}
 					if (Math.Abs(cyl.length - idealLength) > 0.05) {
 						cyl.length = (float)idealLength;
-						if (part.GetModule<ProceduralPart>().shapeName == cyl.displayName) {
+						if (part.Modules.GetModule<ProceduralPart>().shapeName == cyl.displayName) {
 							cyl.Update();
 						}
 					}
 				}
-				if (part.HasModule<ProceduralShapePill>()) {
+				if (part.Modules.Contains<ProceduralShapePill>()) {
 					// We won't try to change the "fillet", so we can treat it as a constant
 					// Diameter is likewise a constant here
-					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+					ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
 					double fillet = pil.fillet, diameter = pil.diameter;
 					double idealLength = (idealVolume * 24f / Math.PI - (10f - 3f * Math.PI) * fillet * fillet * fillet - 3f * (Math.PI - 4) * diameter * fillet * fillet) / (6f * diameter * diameter);
 					if (idealLength < 1) {
@@ -443,13 +446,13 @@ namespace SmartTank {
 					}
 					if (Math.Abs(pil.length - idealLength) > 0.05) {
 						pil.length = (float)idealLength;
-						if (part.GetModule<ProceduralPart>().shapeName == pil.displayName) {
+						if (part.Modules.GetModule<ProceduralPart>().shapeName == pil.displayName) {
 							pil.Update();
 						}
 					}
 				}
-				if (part.HasModule<ProceduralShapeCone>()) {
-					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				if (part.Modules.Contains<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
 					double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
 					double idealLength = idealVolume * 12f / (Math.PI * (topDiameter * topDiameter + topDiameter * bottomDiameter + bottomDiameter * bottomDiameter));
 					if (idealLength < 1) {
@@ -457,7 +460,7 @@ namespace SmartTank {
 					}
 					if (Math.Abs(con.length - idealLength) > 0.05) {
 						con.length = (float)idealLength;
-						if (part.GetModule<ProceduralPart>().shapeName == con.displayName) {
+						if (part.Modules.GetModule<ProceduralPart>().shapeName == con.displayName) {
 							con.Update();
 						}
 					}

@@ -11,7 +11,7 @@ LANGUAGES=$(ASSETDIR)/lang
 README=README.md
 GAMELINK=$(SOURCEDIR)/KSP_Data
 PROCPARTSLINK=$(SOURCEDIR)/ProceduralParts
-DEFAULTGAMEDIR=$(HOME)/.local/share/Steam/SteamApps/common/Kerbal Space Program
+DEFAULTGAMEDIR=$(HOME)/.local/share/Steam/steamapps/common/Kerbal Space Program
 
 DEBUGDLL=$(SOURCEDIR)/bin/Debug/$(PROJECT).dll
 RELEASEDLL=$(SOURCEDIR)/bin/Release/$(PROJECT).dll
@@ -41,7 +41,7 @@ $(DEBUGDLL): $(SOURCE) $(GAMELINK) $(PROCPARTSLINK)
 $(RELEASEDLL): $(SOURCE) $(GAMELINK) $(PROCPARTSLINK)
 	cd $(SOURCEDIR) && msbuild /p:Configuration=Release
 
-$(RELEASEZIP): $(RELEASEDLL) $(ICONS) $(README) $(DLLDOCS) $(DLLSYMBOLS) $(LICENSE) $(INTERNALCKAN) $(VERSION) $(CONFIGS) $(LANGUAGES)
+$(RELEASEZIP): $(RELEASEDLL) $(ICONS) $(README) $(LICENSE) $(INTERNALCKAN) $(VERSION) $(CONFIGS) $(LANGUAGES)
 	mkdir -p $(DISTDIR)
 	cp -a $^ $(DISTDIR)
 	zip -qr $@ $(DISTDIR) -x \*.settings

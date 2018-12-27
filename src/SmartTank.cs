@@ -5,7 +5,6 @@ using UnityEngine;
 using KSP;
 using KSP.UI.Screens;
 using KSP.Localization;
-using SmartTank.Simulation;
 using ProceduralParts;
 
 namespace SmartTank {
@@ -19,6 +18,9 @@ namespace SmartTank {
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public class SmartTank : MonoBehavior {
 
+		/// <summary>
+		/// Iniitalize a smart tank behavior
+		/// </summary>
 		public SmartTank() : base() { }
 
 		/// <summary>
@@ -35,53 +37,8 @@ namespace SmartTank {
 		public void Start()
 		{
 			if (ProceduralPartsInstalled) {
-				GameEvents.onEditorShipModified.Add(OnShipModified);
-				GameEvents.onEditorPartPlaced.Add(OnPartPlaced);
-				GameEvents.StageManager.OnGUIStageSequenceModified.Add(OnStagingChanged);
-
-				SimManager.OnReady += OnSimUpdate;
 				Settings.Instance.HideNonProceduralPartsChanged();
-			}
-		}
-
-		private bool needSimulation = false;
-
-		private void OnShipModified(ShipConstruct sc)
-		{
-			needSimulation = true;
-		}
-
-		private void OnPartPlaced(Part p)
-		{
-			needSimulation = true;
-		}
-
-		private void OnStagingChanged()
-		{
-			needSimulation = true;
-		}
-
-		private void Update()
-		{
-			if (needSimulation) {
-				RunSimulator();
-				needSimulation = false;
-			}
-		}
-
-		private void RunSimulator()
-		{
-			if (ProceduralPartsInstalled) {
-				try {
-					SimManager.Gravity = gravAccel(FlightGlobals.GetHomeBody());
-					SimManager.Atmosphere = FlightGlobals.GetHomeBody().GetPressure(0) * PhysicsGlobals.KpaToAtmospheres;
-					SimManager.Mach = 0;
-					SimManager.RequestSimulation();
-					SimManager.TryStartSimulation();
-				} catch (Exception ex) {
-					print($"Exception while updating SmartTank: {ex.Message}");
-					print($"{ex.StackTrace}");
-				}
+				GameEvents.onDeltaVCalcsCompleted.Add(OnDeltaVCalcsCompleted);
 			}
 		}
 
@@ -91,12 +48,13 @@ namespace SmartTank {
 		public void OnDisable()
 		{
 			if (ProceduralPartsInstalled) {
-				GameEvents.onEditorShipModified.Remove(OnShipModified);
-				GameEvents.onEditorPartPlaced.Remove(OnPartPlaced);
-				GameEvents.StageManager.OnGUIStageSequenceModified.Remove(OnStagingChanged);
-
-				SimManager.OnReady -= OnSimUpdate;
+				GameEvents.onDeltaVCalcsCompleted.Remove(OnDeltaVCalcsCompleted);
 			}
+		}
+
+		private void OnDeltaVCalcsCompleted()
+		{
+			OnSimUpdate(EditorLogic.fetch?.ship?.vesselDeltaV);
 		}
 
 		/// <summary>
@@ -115,28 +73,36 @@ namespace SmartTank {
 
 		/// <summary>
 		/// Fires when the simulator is updated
+		/// Populates the KSPFields for PP tanks so their PartModules can do the scaling
 		/// </summary>
-		private void OnSimUpdate()
+		private void OnSimUpdate(VesselDeltaV dvCalc)
 		{
+			if (dvCalc == null) {
+				return;
+			}
 			string nodesErr = "";
 			getNodeStructureError(ref nodesErr);
 			double totalMassChange = 0;
 
-			for (int st = 0; st < SimManager.Stages.Length; ++st) {
-				Stage stage = SimManager.Stages[st] ?? null;
-				int numTanks = stage.drainedTanks.Count;
+			//for (int st = 0; st < dvCalc.OperatingStageInfo.Count; ++st) {
+			for (int st = dvCalc.OperatingStageInfo.Count - 1; st >= 0; --st) {
+				DeltaVStageInfo stage = dvCalc.OperatingStageInfo[st];
+
+				List<SmartTankPart> drained = new List<SmartTankPart>(drainedTanks(dvCalc, stage.stage));
+				int numTanks = drained.Count;
 
 				if (stage != null && numTanks > 0) {
-					if (stage.thrust <= 0) {
+
+					if (stage.thrustVac <= 0) {
 						// No thrust on this stage, so fuel doesn't make sense either.
 						// Note that IdealTotalMass effectively is optional for the parts
 						// to obey; if AutoScale is false, they can ignore it.
 						for (int t = 0; t < numTanks; ++t) {
 							// Reset all the tanks to minimum size with no thrust
-							stage.drainedTanks[t].nodesError     = nodesErr;
-							stage.drainedTanks[t].IdealTotalMass = 0;
-							if (stage.drainedTanks[0].AutoScale) {
-								totalMassChange -= partTotalMass(stage.drainedTanks[t].part);
+							drained[t].nodesError     = nodesErr;
+							drained[t].IdealTotalMass = 0;
+							if (drained[0].AutoScale) {
+								totalMassChange -= partTotalMass(drained[t].part);
 							}
 						}
 
@@ -146,29 +112,34 @@ namespace SmartTank {
 						// Add up the current procedural tank mass
 						double currentProcTankMass = 0;
 						for (int t = 0; t < numTanks; ++t) {
-							currentProcTankMass += partTotalMass(stage.drainedTanks[t].part);
+							currentProcTankMass += partTotalMass(drained[t].part);
 						}
 
 						// Determine the mass that the procedural parts can't change
-						double nonProcMass = stage.totalMass - currentProcTankMass + totalMassChange;
+						double nonProcMass = stage.startMass - currentProcTankMass + totalMassChange;
+
+						if (nonProcMass < 0) {
+							// Sanity check, this is negative a lot
+							continue;
+						}
 
 						// Get the thrust this stage is configured to use
-						double thrust = stage.drainedTanks[0].Atmospheric
-							? stage.thrust
-							: stage.vacuumThrust;
+						double thrust = drained[0].Atmospheric
+							? stage.thrustASL
+							: stage.thrustVac;
 
 						// Calculate the mass to distribute among this stage's procedural tanks
 						// This includes their wet AND dry mass!
 						double targetProcTankMass = optimalTankMass(
 							thrust,
-							stage.drainedTanks[0].bodyGravAccel,
-							stage.drainedTanks[0].targetTWR,
+							drained[0].bodyGravAccel,
+							drained[0].targetTWR,
 							nonProcMass
 						);
 
 						// Assume we'll have our way if auto scaling,
 						// otherwise use the existing mass
-						if (stage.drainedTanks[0].AutoScale) {
+						if (drained[0].AutoScale) {
 							double massChange = targetProcTankMass > 0
 								? targetProcTankMass - currentProcTankMass
 								: 0;
@@ -179,10 +150,31 @@ namespace SmartTank {
 						double perTankRatio = targetProcTankMass / currentProcTankMass;
 						if (Math.Abs(perTankRatio - 1) > 0.01) {
 							for (int t = 0; t < numTanks; ++t) {
-								stage.drainedTanks[t].nodesError     = nodesErr;
-								stage.drainedTanks[t].IdealTotalMass = perTankRatio * partTotalMass(stage.drainedTanks[t].part);
+								drained[t].nodesError     = nodesErr;
+								drained[t].IdealTotalMass = perTankRatio * partTotalMass(drained[t].part);
 							}
 						}
+					}
+				}
+			}
+		}
+
+		private IEnumerable<SmartTankPart> drainedTanks(VesselDeltaV dvCalc, int stageIndex)
+		{
+			for (int i = 0; i < dvCalc.PartInfo.Count; ++i) {
+				DeltaVPartInfo pi = dvCalc.PartInfo[i];
+
+				DeltaVPartInfo.PartStageFuelMass psfm = null;
+
+				if (pi.part.Modules.Contains<SmartTankPart>()
+						&& pi.stageFuelMass.TryGetValue(stageIndex, out psfm)) {
+
+					// The calculator doesn't give us an end mass of 0 for emptied tanks,
+					// nor end=start for untouched tanks (rounding errors?).
+					// So check whether it's more than half depleted.
+					// Mass of 0 indicates decoupling.
+					if (psfm.endMass < 0.5 * psfm.startMass && psfm.endMass > 0) {
+						yield return pi.part.Modules.GetModule<SmartTankPart>();
 					}
 				}
 			}

@@ -13,6 +13,9 @@ namespace SmartTank {
 	/// </summary>
 	public class DiameterMatcher : PartModule {
 
+		/// <summary>
+		/// Initialize a diameter matcher module
+		/// </summary>
 		public DiameterMatcher() : base() { }
 
 		/// <summary>
@@ -87,16 +90,16 @@ namespace SmartTank {
 
 		private bool diameterActive {
 			set {
-				if (part.HasModule<ProceduralShapeCylinder>()) {
-					ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+				if (part.Modules.Contains<ProceduralShapeCylinder>()) {
+					ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
 					cyl.Fields["diameter"].guiActiveEditor = value;
 				}
-				if (part.HasModule<ProceduralShapePill>()) {
-					ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+				if (part.Modules.Contains<ProceduralShapePill>()) {
+					ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
 					pil.Fields["diameter"].guiActiveEditor = value;
 				}
-				if (part.HasModule<ProceduralShapeCone>()) {
-					ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				if (part.Modules.Contains<ProceduralShapeCone>()) {
+					ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
 					con.Fields["topDiameter"   ].guiActiveEditor = value;
 					con.Fields["bottomDiameter"].guiActiveEditor = value;
 				}
@@ -110,15 +113,15 @@ namespace SmartTank {
 
 		private bool shapeNameActive {
 			get {
-				if (part.HasModule<ProceduralPart>()) {
-					ProceduralPart pp = part.GetModule<ProceduralPart>();
+				if (part.Modules.Contains<ProceduralPart>()) {
+					ProceduralPart pp = part.Modules.GetModule<ProceduralPart>();
 					return pp.Fields["shapeName"].guiActiveEditor;
 				}
 				return false;
 			}
 			set {
-				if (shapeNameActiveDefault && part.HasModule<ProceduralPart>()) {
-					ProceduralPart pp = part.GetModule<ProceduralPart>();
+				if (shapeNameActiveDefault && part.Modules.Contains<ProceduralPart>()) {
+					ProceduralPart pp = part.Modules.GetModule<ProceduralPart>();
 					pp.Fields["shapeName"].guiActiveEditor = value;
 				}
 			}
@@ -153,28 +156,28 @@ namespace SmartTank {
 		{
 			AttachNode oppo = ReallyFindOpposingNode(an);
 			if (oppo != null) {
-				if (oppo.owner != null && oppo.owner.HasModule<ProceduralPart>()) {
-					ProceduralPart oppoPP = oppo.owner.GetModule<ProceduralPart>();
+				if (oppo.owner != null && oppo.owner.Modules.Contains<ProceduralPart>()) {
+					ProceduralPart oppoPP = oppo.owner.Modules.GetModule<ProceduralPart>();
 					switch (oppoPP.shapeName) {
 						case "Cylinder":
-							return oppo.owner.GetModule<ProceduralShapeCylinder>().diameter;
+							return oppo.owner.Modules.GetModule<ProceduralShapeCylinder>().diameter;
 						case "Curved": // Only used by the decoupler
 						case "Fillet Cylinder":
-							return oppo.owner.GetModule<ProceduralShapePill>().diameter;
+							return oppo.owner.Modules.GetModule<ProceduralShapePill>().diameter;
 						case "Cone":
 							switch (an.id) {
 								case "top":
-									return oppo.owner.GetModule<ProceduralShapeCone>().bottomDiameter;
+									return oppo.owner.Modules.GetModule<ProceduralShapeCone>().bottomDiameter;
 								case "bottom":
-									return oppo.owner.GetModule<ProceduralShapeCone>().topDiameter;
+									return oppo.owner.Modules.GetModule<ProceduralShapeCone>().topDiameter;
 							}
 							break;
 						case "Smooth Cone":
 							switch (an.id) {
 								case "top":
-									return oppo.owner.GetModule<ProceduralShapeCone>().bottomDiameter;
+									return oppo.owner.Modules.GetModule<ProceduralShapeCone>().bottomDiameter;
 								case "bottom":
-									return oppo.owner.GetModule<ProceduralShapeCone>().topDiameter;
+									return oppo.owner.Modules.GetModule<ProceduralShapeCone>().topDiameter;
 							}
 							break;
 					}
@@ -220,9 +223,9 @@ namespace SmartTank {
 
 		private bool SetShape<T>() where T : ProceduralAbstractShape
 		{
-			if (part.HasModule<ProceduralPart>() && part.HasModule<T>()) {
-				ProceduralPart pp = part.GetModule<ProceduralPart>();
-				T shape = part.GetModule<T>();
+			if (part.Modules.Contains<ProceduralPart>() && part.Modules.Contains<T>()) {
+				ProceduralPart pp = part.Modules.GetModule<ProceduralPart>();
+				T shape = part.Modules.GetModule<T>();
 				if (pp.shapeName != shape.displayName) {
 					pp.shapeName = shape.displayName;
 					// Give the module a chance to update before we do anything else
@@ -237,10 +240,10 @@ namespace SmartTank {
 		private void SetCylindricalDiameter(float diameter)
 		{
 			if (SetShape<ProceduralShapeCylinder>()) {
-				ProceduralShapeCylinder cyl = part.GetModule<ProceduralShapeCylinder>();
+				ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
 				cyl.diameter = diameter;
 			} else if (SetShape<ProceduralShapePill>()) {
-				ProceduralShapePill pil = part.GetModule<ProceduralShapePill>();
+				ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
 				pil.diameter = diameter;
 			}
 		}
@@ -248,7 +251,7 @@ namespace SmartTank {
 		private void SetConeDiameters(float topDiameter, float bottomDiameter)
 		{
 			if (SetShape<ProceduralShapeCone>()) {
-				ProceduralShapeCone con = part.GetModule<ProceduralShapeCone>();
+				ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
 				con.topDiameter    = topDiameter;
 				con.bottomDiameter = bottomDiameter;
 			} else {
