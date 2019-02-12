@@ -20,7 +20,3 @@
 - [ ] Determine atmospheric programmatically based on engine or time after launch
 - [ ] Multiple texture defaults based on dimensions (small, medium, large)
 - [ ] Option to size for a target delta V
-
-## Code style
-
-- [ ] Abstract out KER simulator into standalone DLL w/ callbacks

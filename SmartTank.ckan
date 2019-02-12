@@ -3,7 +3,7 @@
     "identifier":     "SmartTank",
     "name":           "SmartTank",
     "abstract":       "Automatically resizes ProceduralParts fuel tanks to fit a specified thrust to weight ratio",
-    "description":    "Uses an embedded copy of Kerbal Engineer's vessel simulator to determine the TWR of each stage, then adjusts the sizes of tanks from Procedural Parts to fit a user-specified TWR. Also sets top and bottom diameters to match attached parts, matches the fuel tank type to the attached engine, and allows the user to change the default texture. All such features can be toggled at the part level with tweakables or at the system level via a button in the stock toolbar.",
+    "description":    "Uses the stock vessel simulator to determine the TWR of each stage, then adjusts the sizes of tanks from Procedural Parts to fit a user-specified TWR. Also sets top and bottom diameters to match attached parts, matches the fuel tank type to the attached engine, and allows the user to change the default texture. All such features can be toggled at the part level with tweakables or at the system level via a button in the stock toolbar.",
     "comment":        "Indexed by author. Please report any problems at the repository bugtracker.",
     "$vref":          "#/ckan/ksp-avc",
     "license":        "GPL-3.0",

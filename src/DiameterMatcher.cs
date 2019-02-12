@@ -184,10 +184,42 @@ namespace SmartTank {
 				}
 				switch (oppo.size) {
 					case 0:  return 0.625f;
+					case 2:  return treat2As1p5(oppo) ? 1.875f : 2.5f;
 					default: return 1.25f * oppo.size;
 				}
 			}
 			return 0f;
+		}
+
+		/// <summary>
+		/// 1.875m parts are treated as 2.5m parts in the AttachNode.size property,
+		/// since it's an integer.
+		/// To identify nodes that are actually 1.875m, we have to check
+		/// the AvailablePart.bulkheadProfiles property:
+		///
+		/// Diameter | size | bulkheadProfiles
+		/// ---------+------+------------------
+		/// 0.625m   | 0    | size0
+		/// 1.25m    | 1    | size1
+		/// 1.875m   | 2    | size1p5*
+		/// 2.5m     | 2    | size2
+		/// 3.75m    | 3    | size3
+		/// 5m       | 4    | size4
+		/// * The Cheetah has a bulkheadProfiles of size1 despite being 1.875m,
+		///   so we don't require it to contain size1p5.
+		///
+		/// Note that 100% correct determination is impossible in the case of
+		/// an adapter that's 1.875m on one side and 2.5m on the other, since
+		/// both have size=2 and bulkheadProfiles will contain both size1p5 and size2.
+		/// </summary>
+		/// <param name="an">Attach node to check</param>
+		/// <returns>
+		/// True if a size of 2 should be treated as 1.875m on this part,
+		/// false if it should be treated as 2.5m.
+		/// </returns>
+		private bool treat2As1p5(AttachNode an)
+		{
+			return !an?.owner?.partInfo?.bulkheadProfiles?.Contains("size2") ?? false;
 		}
 
 		private AttachNode ReallyFindOpposingNode(AttachNode an)
