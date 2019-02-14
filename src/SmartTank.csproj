@@ -78,6 +78,7 @@
     <Compile Include="AppLauncher.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsView.cs" />
+    <Compile Include="PausedView.cs" />
     <Compile Include="DialogGUIChooseOption.cs" />
     <Compile Include="Extensions\TooltipExtensions.cs" />
     <Compile Include="Helpers\ShipIntegrity.cs" />

@@ -44,6 +44,14 @@ namespace SmartTank {
 			RemoveLauncher();
 		}
 
+		/// <summary>
+		/// Return the location of the button
+		/// </summary>
+		public Vector3 GetAnchor()
+		{
+			return launcher?.GetAnchor() ?? Vector3.right;
+		}
+
 		private void AddLauncher()
 		{
 			if (ApplicationLauncher.Ready && launcher == null)

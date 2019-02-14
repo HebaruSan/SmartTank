@@ -342,10 +342,10 @@ namespace SmartTank {
 				if (part.Modules.Contains<TankContentSwitcher>()) {
 					part.Modules.GetModule<TankContentSwitcher>().Fields["tankType"].guiActiveEditor = !FuelMatching;
 				}
-				if (AutoScale) {
+				if (AutoScale && !SmartTank.Paused) {
 					ScaleNow();
 				}
-				allowResourceEditing(!AutoScale);
+				allowResourceEditing(!AutoScale || SmartTank.Paused);
 
 				Fields["nodesError"].guiActiveEditor = (nodesError.Length > 0);
 			}

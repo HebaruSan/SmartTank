@@ -71,6 +71,34 @@ namespace SmartTank {
 			return p.mass + p.GetResourceMass();
 		}
 
+		private static bool         paused       = false;
+		private static VesselDeltaV pausedDeltaV = null;
+		private static PausedView   pausedDialog = null;
+
+		/// <summary>
+		/// Whether auto scaling is enabled
+		/// </summary>
+		public static bool Paused {
+			get {
+				return paused;
+			}
+			set {
+				if (paused != value) {
+					paused = value;
+					if (paused) {
+						pausedDialog = new PausedView(() => Paused = false);
+						pausedDialog.Show(UnityEngine.Object.FindObjectOfType<AppLauncher>().GetAnchor());
+					} else {
+						pausedDialog?.Dismiss();
+						pausedDialog = null;
+
+						UnityEngine.Object.FindObjectOfType<SmartTank>().OnSimUpdate(pausedDeltaV);
+						pausedDeltaV = null;
+					}
+				}
+			}
+		}
+
 		/// <summary>
 		/// Fires when the simulator is updated
 		/// Populates the KSPFields for PP tanks so their PartModules can do the scaling
@@ -80,11 +108,14 @@ namespace SmartTank {
 			if (dvCalc == null) {
 				return;
 			}
+			if (Paused) {
+				pausedDeltaV = dvCalc;
+				return;
+			}
 			string nodesErr = "";
 			getNodeStructureError(ref nodesErr);
 			double totalMassChange = 0;
 
-			//for (int st = 0; st < dvCalc.OperatingStageInfo.Count; ++st) {
 			for (int st = dvCalc.OperatingStageInfo.Count - 1; st >= 0; --st) {
 				DeltaVStageInfo stage = dvCalc.OperatingStageInfo[st];
 
