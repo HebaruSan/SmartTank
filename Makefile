@@ -52,17 +52,17 @@ $(PROCPARTSLINK):
 		echo "$(PROCPARTSLINK) not found."; \
 		echo 'This must be a symlink to the folder where ProceduralParts is installed.'; \
 		exit 2; \
-	elif [ ! -x "$(DEFAULTGAMEDIR)/GameData/ProceduralParts" ]; \
+	elif [ ! -d "$(DEFAULTGAMEDIR)/GameData/ProceduralParts" ]; \
 	then \
-		echo "ProceduralParts is not installed at $(DEFAULTGAMEDIR)." \
-		echo "It is a prerequisite for this mod." \
+		echo "ProceduralParts is not installed at $(DEFAULTGAMEDIR)."; \
+		echo "It is a prerequisite for this mod."; \
 		exit 2; \
 	else \
 		ln -s "$(DEFAULTGAMEDIR)"/GameData/ProceduralParts $(PROCPARTSLINK); \
 	fi
 
 $(GAMELINK):
-	if [ -x "$(DEFAULTGAMEDIR)" ]; \
+	if [ -d "$(DEFAULTGAMEDIR)" ]; \
 	then \
 		ln -s "$(DEFAULTGAMEDIR)"/KSP_Data $(GAMELINK); \
 	else \
