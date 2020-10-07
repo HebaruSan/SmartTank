@@ -64,12 +64,14 @@ namespace SmartTank {
 		/// Field to toggle this module's functionality
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_DiameterMatchingPrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true
+			guiName          = "smartTank_DiameterMatchingPrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_Toggle(
-			scene           = UI_Scene.Editor
+			scene            = UI_Scene.Editor
 		)]
 		public bool DiameterMatching = Settings.Instance.DiameterMatching;
 
@@ -259,9 +261,7 @@ namespace SmartTank {
 				ProceduralPart pp = part.Modules.GetModule<ProceduralPart>();
 				T shape = part.Modules.GetModule<T>();
 				if (pp.shapeName != shape.displayName) {
-					pp.shapeName = shape.displayName;
-					// Give the module a chance to update before we do anything else
-					pp.Update();
+					pp.SetShapeName(shape.displayName);
 				}
 				return true;
 			} else {
@@ -273,10 +273,14 @@ namespace SmartTank {
 		{
 			if (SetShape<ProceduralShapeCylinder>()) {
 				ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
-				cyl.diameter = diameter;
+				float prevDiameter = cyl.diameter;
+				cyl.diameter       = diameter;
+				Notify(() => cyl.OnShapeDimensionChanged(cyl.Fields["diameter"], prevDiameter));
 			} else if (SetShape<ProceduralShapePill>()) {
 				ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
-				pil.diameter = diameter;
+				float prevDiameter = pil.diameter;
+				pil.diameter       = diameter;
+				Notify(() => pil.OnShapeDimensionChanged(pil.Fields["diameter"], prevDiameter));
 			}
 		}
 
@@ -284,8 +288,14 @@ namespace SmartTank {
 		{
 			if (SetShape<ProceduralShapeCone>()) {
 				ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
+				float prevTopDiameter    = con.topDiameter;
+				float prevBottomDiameter = con.bottomDiameter;
 				con.topDiameter    = topDiameter;
 				con.bottomDiameter = bottomDiameter;
+				Notify(() => {
+					con.OnShapeDimensionChanged(con.Fields["topDiameter"], prevTopDiameter);
+					con.OnShapeDimensionChanged(con.Fields["bottomDiameter"], prevBottomDiameter);
+				});
 			} else {
 				SetCylindricalDiameter(Math.Max(topDiameter, bottomDiameter));
 			}
@@ -300,6 +310,23 @@ namespace SmartTank {
 				if (DiameterMatching) {
 					MatchDiameters();
 				}
+			}
+		}
+
+		private bool needChangeNotif = false;
+
+		private void Notify(Action how)
+		{
+			var others = part.symmetryCounterparts
+				.Select(other => other.Modules.GetModule<DiameterMatcher>())
+				.ToList();
+			if (others.All(dm => dm.needChangeNotif)) {
+				how();
+				foreach (DiameterMatcher dm in others) {
+					dm.needChangeNotif = false;
+				}
+			} else {
+				needChangeNotif = true;
 			}
 		}
 

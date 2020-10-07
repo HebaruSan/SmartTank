@@ -38,6 +38,8 @@ namespace SmartTank {
 		{
 			if (ProceduralPartsInstalled) {
 				Settings.Instance.HideNonProceduralPartsChanged();
+				// SmartTank requires the "All Part Upgrades Applied In Sandbox" setting
+				HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PartUpgradesInSandbox = true;
 				GameEvents.onDeltaVCalcsCompleted.Add(OnDeltaVCalcsCompleted);
 			}
 		}
@@ -177,13 +179,11 @@ namespace SmartTank {
 							totalMassChange += massChange;
 						}
 
-						// Distribute the mass in the same proportions as it is now
-						double perTankRatio = targetProcTankMass / currentProcTankMass;
-						if (Math.Abs(perTankRatio - 1) > 0.01) {
-							for (int t = 0; t < numTanks; ++t) {
-								drained[t].nodesError     = nodesErr;
-								drained[t].IdealTotalMass = perTankRatio * partTotalMass(drained[t].part);
-							}
+						// Distribute the mass evenly
+						double massPerTank = targetProcTankMass / numTanks;
+						for (int t = 0; t < numTanks; ++t) {
+							drained[t].nodesError     = nodesErr;
+							drained[t].IdealTotalMass = massPerTank;
 						}
 					}
 				}

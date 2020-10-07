@@ -72,12 +72,14 @@ namespace SmartTank {
 		/// Field to toggle whether to match fuel to engine
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_FuelMatchingPrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true
+			guiName          = "smartTank_FuelMatchingPrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_Toggle(
-			scene           = UI_Scene.Editor
+			scene            = UI_Scene.Editor
 		)]
 		public bool FuelMatching = Settings.Instance.FuelMatching;
 
@@ -159,10 +161,12 @@ namespace SmartTank {
 		/// Debugging field to show in which stage this tank drains, hidden by default.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_DrainsInStagePrompt",
-			isPersistant    = false,
-			guiActive       = false,
-			guiActiveEditor = false
+			guiName          = "smartTank_DrainsInStagePrompt",
+			isPersistant     = false,
+			guiActive        = false,
+			guiActiveEditor  = false,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		)]
 		public int DrainStage = -1;
 
@@ -171,10 +175,12 @@ namespace SmartTank {
 		/// Only visible if an error is found AND when compiled with DEBUG enabled.
 		/// </summary>
 		[KSPField(
-			guiName         = "Nodes error",
-			isPersistant    = false,
-			guiActive       = false,
-			guiActiveEditor = false
+			guiName          = "Nodes error",
+			isPersistant     = false,
+			guiActive        = false,
+			guiActiveEditor  = false,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		)]
 		public string nodesError;
 
@@ -183,10 +189,12 @@ namespace SmartTank {
 		/// Set by the SmartTank ship-level module.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_IdealWetMassPrompt",
-			isPersistant    = false,
-			guiActive       = false,
-			guiActiveEditor = false
+			guiName          = "smartTank_IdealWetMassPrompt",
+			isPersistant     = false,
+			guiActive        = false,
+			guiActiveEditor  = false,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		)]
 		public double IdealTotalMass;
 
@@ -194,12 +202,14 @@ namespace SmartTank {
 		/// Field for the body to use for TWR calculation.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_TWRAtPrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true
+			guiName          = "smartTank_TWRAtPrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_ChooseOption(
-			scene           = UI_Scene.Editor
+			scene            = UI_Scene.Editor
 		)]
 		public string BodyForTWR = Settings.Instance.BodyForTWR;
 
@@ -257,12 +267,14 @@ namespace SmartTank {
 		/// Field to toggle whether the target TWR should be vacuum or in-atmosphere.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_AtmosphericPrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true
+			guiName          = "smartTank_AtmosphericPrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_Toggle(
-			scene           = UI_Scene.Editor
+			scene            = UI_Scene.Editor
 		)]
 		public bool Atmospheric = Settings.Instance.Atmospheric;
 
@@ -270,19 +282,21 @@ namespace SmartTank {
 		/// Thrust-to-weight ratio to aim for in this stage.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_TargetTWRPrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true,
-			guiFormat       = "G2"
+			guiName          = "smartTank_TargetTWRPrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			guiFormat        = "G2",
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_FloatEdit(
-			scene           = UI_Scene.Editor,
-			incrementSlide  = 0.1f,
-			incrementLarge  = 1f,
-			incrementSmall  = 0.1f,
-			minValue        = 0.1f,
-			maxValue        = 10f,
-			sigFigs         = 1
+			scene            = UI_Scene.Editor,
+			incrementSlide   = 0.1f,
+			incrementLarge   = 1f,
+			incrementSmall   = 0.1f,
+			minValue         = 0.1f,
+			maxValue         = 10f,
+			sigFigs          = 1
 		)]
 		public float targetTWR = Settings.Instance.TargetTWR;
 
@@ -290,12 +304,14 @@ namespace SmartTank {
 		/// Field to toggle whether size of tank should be set automatically.
 		/// </summary>
 		[KSPField(
-			guiName         = "smartTank_AutoScalePrompt",
-			isPersistant    = true,
-			guiActive       = false,
-			guiActiveEditor = true
+			guiName          = "smartTank_AutoScalePrompt",
+			isPersistant     = true,
+			guiActive        = false,
+			guiActiveEditor  = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		), UI_Toggle(
-			scene           = UI_Scene.Editor
+			scene            = UI_Scene.Editor
 		)]
 		public bool AutoScale = Settings.Instance.AutoScale;
 
@@ -404,72 +420,31 @@ namespace SmartTank {
 			}
 		}
 
+		private double prevAttemptedVolume = 0;
+
 		/// <summary>
-		/// Event to manually trigger the sizing.
-		/// Only used when auto-scaling is off.
+		/// Event to trigger the sizing.
 		/// </summary>
 		[KSPEvent(
-			guiName         = "smartTank_ScaleNowPrompt",
-			guiActive       = false,
-			guiActiveEditor = true,
-			active          = true
+			guiName          = "smartTank_ScaleNowPrompt",
+			guiActive        = false,
+			guiActiveEditor  = true,
+			active           = true,
+			groupName        = SmartTank.Name,
+			groupDisplayName = SmartTank.Name
 		)]
 		public void ScaleNow()
 		{
 			if (HighLogic.LoadedSceneIsEditor && wetDensity > 0) {
 				// Volume of fuel to use:
 				double idealVolume = IdealTotalMass / wetDensity;
-
-				if (part.Modules.Contains<ProceduralShapeCylinder>()) {
-					ProceduralShapeCylinder cyl = part.Modules.GetModule<ProceduralShapeCylinder>();
-					double radius = 0.5 * cyl.diameter;
-					double crossSectionArea = Math.PI * radius * radius;
-					double idealLength = idealVolume / crossSectionArea;
-					if (idealLength < radius) {
-						idealLength = radius;
-					}
-					if (Math.Abs(cyl.length - idealLength) > 0.05) {
-						cyl.length = (float)idealLength;
-						if (part.Modules.GetModule<ProceduralPart>().shapeName == cyl.displayName) {
-							cyl.Update();
-						}
-					}
+				if (prevAttemptedVolume != idealVolume) {
+					prevAttemptedVolume = idealVolume;
+					part.Modules.GetModule<ProceduralPart>()?.SeekVolume(
+						(float)Math.Max(idealVolume, 1));
 				}
-				if (part.Modules.Contains<ProceduralShapePill>()) {
-					// We won't try to change the "fillet", so we can treat it as a constant
-					// Diameter is likewise a constant here
-					ProceduralShapePill pil = part.Modules.GetModule<ProceduralShapePill>();
-					double fillet = pil.fillet, diameter = pil.diameter;
-					double idealLength = (idealVolume * 24f / Math.PI - (10f - 3f * Math.PI) * fillet * fillet * fillet - 3f * (Math.PI - 4) * diameter * fillet * fillet) / (6f * diameter * diameter);
-					if (idealLength < 1) {
-						idealLength = 1;
-					}
-					if (Math.Abs(pil.length - idealLength) > 0.05) {
-						pil.length = (float)idealLength;
-						if (part.Modules.GetModule<ProceduralPart>().shapeName == pil.displayName) {
-							pil.Update();
-						}
-					}
-				}
-				if (part.Modules.Contains<ProceduralShapeCone>()) {
-					ProceduralShapeCone con = part.Modules.GetModule<ProceduralShapeCone>();
-					double topDiameter = con.topDiameter, bottomDiameter = con.bottomDiameter;
-					double idealLength = idealVolume * 12f / (Math.PI * (topDiameter * topDiameter + topDiameter * bottomDiameter + bottomDiameter * bottomDiameter));
-					if (idealLength < 1) {
-						idealLength = 1;
-					}
-					if (Math.Abs(con.length - idealLength) > 0.05) {
-						con.length = (float)idealLength;
-						if (part.Modules.GetModule<ProceduralPart>().shapeName == con.displayName) {
-							con.Update();
-						}
-					}
-				}
-				// BezierCone shapes not supported because they're too complicated.
-				// See ProceduralShapeBezierCone.CalcVolume to see why.
 			}
 		}
-
 	}
 
 }

@@ -23,11 +23,9 @@ This mod will do nothing unless you install **all** of the dependencies!
 
 [Module Manager forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/50533-130-module-manager-280-may-26th-2017-better-late-than-never/
 
-[Procedural Parts repository]: https://github.com/Starwaster/ProceduralParts
+[Procedural Parts repository]: https://github.com/KSP-RO/ProceduralParts
 
-[Procedural Parts forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/162105-130-procedural-parts-starwaster-branch/
-
-Kerbal Engineer Redux is **not** required. We use our own modified version of KER's vessel simulator, embedded in the main DLL.
+[Procedural Parts forum thread]: https://forum.kerbalspaceprogram.com/index.php?/topic/169250-*
 
 ## Download
 
@@ -41,7 +39,7 @@ Unzip to your GameData folder.
 
 Join us at the [forum thread].
 
-[forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/162743-130-smarttank/
+[forum thread]: https://forum.kerbalspaceprogram.com/index.php?/topic/162743-*
 
 ## Localization
 
@@ -68,8 +66,3 @@ Special thanks to all those who have helped to translate SmartTank to other lang
 | Spanish  | [Fitiales](https://github.com/Fitiales) |
 
 - Icon from http://fontawesome.io/icon/rocket/ http://fontawesome.io/icon/arrows-v/ http://fontawesome.io/icon/arrows-h/
-- Includes vessel simulator from [Kerbal Engineer Redux][Kerbal Engineer repository] ([forum thread][Kerbal Engineer forum thread])
-
-[Kerbal Engineer repository]: https://github.com/CYBUTEK/KerbalEngineer
-
-[Kerbal Engineer forum thread]: http://forum.kerbalspaceprogram.com/index.php?/topic/17833-130-kerbal-engineer-redux-1130-2017-05-28/
